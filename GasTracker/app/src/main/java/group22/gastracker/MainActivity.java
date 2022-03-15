@@ -30,7 +30,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends GlobalActivity {
+
 
     FloatingActionButton addNewEntryButton;
 

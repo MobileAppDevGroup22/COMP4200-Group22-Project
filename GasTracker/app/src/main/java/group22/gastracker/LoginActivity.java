@@ -13,7 +13,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends GlobalActivity {
 
     EditText usernameView, passwordView;
     Button loginButton, signUpButton;
