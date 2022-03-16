@@ -8,7 +8,7 @@
     tools:context=".MainActivity">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
+        android:id="@+id/bottomNavHome"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -45,12 +45,12 @@
         android:id="@+id/actionButton_addEntry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:clickable="true"
         android:scaleType="center"
         app:backgroundTint="@color/design_default_color_primary"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavHome"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="40sp"
         app:srcCompat="@drawable/ic_baseline_add_24"
