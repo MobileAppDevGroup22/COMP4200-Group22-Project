@@ -19,7 +19,10 @@ public class VehicleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vehicle);
 
+        /*******************************************************************************************************
+         * Setup Navigation bar*/
         bottomNav = findViewById(R.id.bottomNavVehicle);
+        bottomNav.setSelectedItemId(R.id.nav_vehicle_list);
         bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -37,9 +40,10 @@ public class VehicleActivity extends AppCompatActivity {
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         break;
                 }
-                return false;
+                return true;
             }
         });
+        /*******************************************************************************************************/
 
     }
 
