@@ -1,26 +1,13 @@
 package group22.gastracker;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -48,17 +35,24 @@ public class MainActivity extends GlobalActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
 
-        bottomNav = findViewById(R.id.bottomNavigationView);
+        bottomNav = findViewById(R.id.bottomNavHome);
         bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
                 switch (item.getItemId()){
-                    case(R.id.nav_home): Toast.makeText(getApplicationContext(), "Home", Toast.LENGTH_SHORT).show();
+                    case(R.id.nav_home):
+                        //Intent vehicleActivity_intent = new Intent(MainActivity.this, VehicleActivity.class);
                         break;
-                    case(R.id.nav_vehicle_list): Toast.makeText(getApplicationContext(), "Vehicles", Toast.LENGTH_SHORT).show();
+                    case(R.id.nav_vehicle_list):
+                        Intent vehicleActivity_intent = new Intent(MainActivity.this, VehicleActivity.class);
+                        startActivity(vehicleActivity_intent);
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         break;
-                    case(R.id.nav_settings): Toast.makeText(getApplicationContext(), "Settings", Toast.LENGTH_SHORT).show();
+                    case(R.id.nav_settings):
+                        Intent settingsActivity_intent = new Intent(MainActivity.this, SettingsActivity.class);
+                        startActivity(settingsActivity_intent);
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         break;
                 }
 
@@ -71,7 +65,8 @@ public class MainActivity extends GlobalActivity {
          *  // vehiclesList.getUsersVehicles();
          */
 
-        //vehicles for testing        vehicleList.add("   2014 Ford Edge");
+        //vehicles for testing
+        vehicleList.add("   2014 Ford Edge");
         vehicleList.add("   2006 Toyota Corolla");
         vehicleList.add("   2006 Honda Civic");
 
@@ -89,5 +84,8 @@ public class MainActivity extends GlobalActivity {
         });
 
     }
+
+    @Override
+    public void onBackPressed() {}
 
 }
