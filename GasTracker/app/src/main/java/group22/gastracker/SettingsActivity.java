@@ -19,7 +19,10 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        /*******************************************************************************************************
+         * Setup Navigation bar*/
         bottomNav = findViewById(R.id.bottomNavSettings);
+        bottomNav.setSelectedItemId(R.id.nav_settings);
         bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -37,9 +40,10 @@ public class SettingsActivity extends AppCompatActivity {
                     case(R.id.nav_settings):
                         break;
                 }
-                return false;
+                return true;
             }
         });
+        /*******************************************************************************************************/
 
     }
 
