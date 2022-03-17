@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-public class VehicleActivity extends AppCompatActivity {
+public class VehicleActivity extends GlobalActivity {
 
     BottomNavigationView bottomNav;
 
@@ -19,8 +19,13 @@ public class VehicleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vehicle);
 
-        /*******************************************************************************************************
-         * Setup Navigation bar*/
+        this.bottomNavBarHandler();
+
+    }
+
+    /*******************************************************************************************************
+     * Navigation bar*/
+    protected void bottomNavBarHandler(){
         bottomNav = findViewById(R.id.bottomNavVehicle);
         bottomNav.setSelectedItemId(R.id.nav_vehicle_list);
         bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -43,8 +48,6 @@ public class VehicleActivity extends AppCompatActivity {
                 return true;
             }
         });
-        /*******************************************************************************************************/
-
     }
 
     @Override
