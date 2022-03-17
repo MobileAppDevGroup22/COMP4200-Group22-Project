@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends GlobalActivity {
 
     BottomNavigationView bottomNav;
 
@@ -19,8 +19,13 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        /*******************************************************************************************************
-         * Setup Navigation bar*/
+        this.bottomNavBarHandler();
+
+    }
+
+    /*******************************************************************************************************
+     * Navigation bar*/
+    protected void bottomNavBarHandler(){
         bottomNav = findViewById(R.id.bottomNavSettings);
         bottomNav.setSelectedItemId(R.id.nav_settings);
         bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -43,8 +48,6 @@ public class SettingsActivity extends AppCompatActivity {
                 return true;
             }
         });
-        /*******************************************************************************************************/
-
     }
 
     @Override
