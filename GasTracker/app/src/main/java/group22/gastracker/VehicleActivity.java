@@ -8,9 +8,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+
+import java.util.ArrayList;
 
 public class VehicleActivity extends GlobalActivity {
 
@@ -19,14 +23,24 @@ public class VehicleActivity extends GlobalActivity {
     int currentTheme = 0;
     SharedPreferences sharedPreferences;
 
+    ListView vehicleListView;
+    ArrayList<String> arrayList_vehicleList = new ArrayList<>();
+    ArrayAdapter<String> adapter_vehicleList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSavedValue();
         updateTheme();
         setContentView(R.layout.activity_vehicle);
-
         this.bottomNavBarHandler();
+
+        vehicleListView = findViewById(R.id.listView_vehicles);
+        arrayList_vehicleList.add("2014 Ford Edge");
+        arrayList_vehicleList.add("2006 Toyota Corolla");
+        arrayList_vehicleList.add("2006 Honda Civic");
+        adapter_vehicleList = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, arrayList_vehicleList);
+        vehicleListView.setAdapter(adapter_vehicleList);
 
     }
 
