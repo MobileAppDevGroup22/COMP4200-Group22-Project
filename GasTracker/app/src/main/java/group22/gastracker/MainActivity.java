@@ -2,10 +2,15 @@ package group22.gastracker;
 
 import androidx.annotation.NonNull;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -33,9 +38,16 @@ public class MainActivity extends GlobalActivity {
 
     BottomNavigationView bottomNav;
 
+    int currentVehiclePosition;
+    int currentTheme = 0;
+    boolean darkMode = false;
+    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSavedValue();
+        updateTheme();
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
 
@@ -56,9 +68,17 @@ public class MainActivity extends GlobalActivity {
          * Setup vehicle dropdown list bar*/
         vehicleDropDown = findViewById(R.id.textInputLayout);
         vehicleDropDownOptions = findViewById(R.id.vehicle_dropdown);
-        arrayAdapter_vehicles = new ArrayAdapter<>(getApplicationContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, vehicleList);
+        arrayAdapter_vehicles = new ArrayAdapter<>(getApplicationContext(), R.layout.dropdown_item, vehicleList);
         vehicleDropDownOptions.setAdapter(arrayAdapter_vehicles);
-        vehicleDropDownOptions.setText(vehicleList.get(0), false);
+        vehicleDropDownOptions.setText(vehicleList.get(currentVehiclePosition), false);
+
+        vehicleDropDownOptions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                currentVehiclePosition = position;
+                rememberVehicle();
+            }
+        });
 
     }
 
@@ -109,11 +129,46 @@ public class MainActivity extends GlobalActivity {
         addNewEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), vehicleDropDownOptions.getText().toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     @Override
     public void onBackPressed() {}//disables back android button
+
+    /*******************************************************************************************************
+     * Shared prefs*/
+    private void rememberVehicle(){
+        sharedPreferences = getSharedPreferences("saveCurrentVehicle", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("currentVehicle", currentVehiclePosition);
+        editor.commit();
+    }
+    protected void getSavedValue(){
+        sharedPreferences = getSharedPreferences("saveCurrentVehicle", Context.MODE_PRIVATE);
+        currentVehiclePosition = sharedPreferences.getInt("currentVehicle", 0);
+        sharedPreferences = getSharedPreferences("themeInfo", Context.MODE_PRIVATE);
+        currentTheme = sharedPreferences.getInt("currentTheme", 0);
+        darkMode = sharedPreferences.getBoolean("darkMode", false);
+    }
+
+    public void updateTheme(){
+        if(currentTheme == 0){
+            setTheme(R.style.purple);
+        }else if(currentTheme == 1){
+            setTheme(R.style.blue);
+        }else if(currentTheme == 2){
+            setTheme(R.style.yellow);
+        }else if(currentTheme == 3){
+            setTheme(R.style.red);
+        }else if(currentTheme == 4){
+            setTheme(R.style.green);
+        }else if(currentTheme == 5){
+            setTheme(R.style.pink);
+        }else{
+            setTheme(R.style.purple);
+        }
+    }
 
 }
