@@ -47,7 +47,7 @@ public class LoginActivity extends GlobalActivity {
         updateTheme();
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
-
+        GlobalGasTracker globalData = (GlobalGasTracker) getApplication();
         usernameView = findViewById(R.id.editText_Username);
         passwordView = findViewById(R.id.editText_Password);
         rememberCheck = findViewById(R.id.checkBox_Remember);
@@ -78,7 +78,8 @@ public class LoginActivity extends GlobalActivity {
                 /******************************************************
                  * Check database to see if credentials are correct
                  */
-
+                username = usernameView.getText().toString();
+                globalData.setUsername(username);
                 Intent main_intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(main_intent);
 

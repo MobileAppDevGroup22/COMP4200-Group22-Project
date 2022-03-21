@@ -1,5 +1,7 @@
 package group22.gastracker;
 
+import static group22.gastracker.Utility.HandleReceivedData;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,13 +10,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class VehicleActivity extends GlobalActivity {
 
@@ -22,6 +30,8 @@ public class VehicleActivity extends GlobalActivity {
 
     int currentTheme = 0;
     SharedPreferences sharedPreferences;
+
+    Button addVehicleButton;
 
     ListView vehicleListView;
     ArrayList<String> arrayList_vehicleList = new ArrayList<>();
@@ -34,14 +44,51 @@ public class VehicleActivity extends GlobalActivity {
         updateTheme();
         setContentView(R.layout.activity_vehicle);
         this.bottomNavBarHandler();
+        GlobalGasTracker globalData = (GlobalGasTracker) getApplication();
+
+        addVehicleButton = findViewById(R.id.button_addVehicle);
 
         vehicleListView = findViewById(R.id.listView_vehicles);
+        /*
         arrayList_vehicleList.add("2014 Ford Edge");
         arrayList_vehicleList.add("2006 Toyota Corolla");
         arrayList_vehicleList.add("2006 Honda Civic");
+         */
+        getVehicleList();
         adapter_vehicleList = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, arrayList_vehicleList);
         vehicleListView.setAdapter(adapter_vehicleList);
 
+        addVehicleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String username = globalData.getUsername();
+                Toast toast = Toast.makeText(getApplicationContext(), username, Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
+
+    }
+
+    protected void getVehicleList(){
+        GlobalGasTracker globalData = (GlobalGasTracker) getApplication();
+        String username = globalData.getUsername();
+/*
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("type", "vehicle");
+        params.put("username", username);
+
+        MakeRequest(Request.Method.POST, params,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String r) {
+                        //Log.d("Volley Log", r);
+
+                        Bundle extractedData = HandleReceivedData(getApplicationContext(), r);
+                        if (extractedData == null)return;
+
+                        arrayList_vehicleList =
+                    }
+                });*/
     }
 
     /*******************************************************************************************************
