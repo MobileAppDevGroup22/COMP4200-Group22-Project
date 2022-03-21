@@ -1,12 +1,22 @@
 package group22.gastracker;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import group22.gastracker.databasing.RequestHandler;
 
 /**
  * Global activity that every activity class should instantiate.
@@ -37,9 +47,39 @@ public class GlobalActivity extends AppCompatActivity {
         requestHandler.addRequest(req);
     }
 
-    //cancels all request tasks of given tag
-    protected void CancelAllOfTag(String tag){
-        requestHandler.cancelAllOfTag(tag);
+    // function to streamline database communication
+    // pass in request type (e.g. Request.Method.POST), params as JSON object, response listener and error listener
+    protected void MakeRequest(int method, Map<String, String> params, Response.Listener<String> responseListener){
+        requestHandler.addRequest( new StringRequest(method, RequestHandler.url, responseListener,
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    error.printStackTrace();
+                                    Log.d("Volley error", params.toString());
+                                }
+                            }) {    @Override
+                                    public Map<String, String> getHeaders() throws AuthFailureError {
+                                        HashMap<String, String> headers = new HashMap<String, String>();
+                                        if (method == Method.POST){
+                                            //headers.put("Content-Type", "application/form-data; charset=utf-8");
+
+                                        }
+                                        headers.put("User-Agent", "GasTracker/1.0");
+                                        //headers.put("", "");
+                                        return headers;
+                                    }
+
+                                   @Nullable
+                                   @Override
+                                   protected Map<String, String> getParams() throws AuthFailureError {
+                                        Log.d("Params", params.toString());
+                                        return params;
+                                   }
+                            }
+        );
     }
+
+    //cancels all request tasks of given tag
+    protected void CancelAllOfTag(String tag){ requestHandler.cancelAllOfTag(tag); }
 
 }
