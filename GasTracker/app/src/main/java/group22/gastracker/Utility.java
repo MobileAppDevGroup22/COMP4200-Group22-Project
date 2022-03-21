@@ -20,6 +20,7 @@ public class Utility {
     * */
     /*
         HashMap<String, String> params = new HashMap<String, String>();
+		params.put("type", ""); //always remember what type of request you're making - see reference sheet
         //put values into params
 
         MakeRequest(Request.Method.POST, params,
