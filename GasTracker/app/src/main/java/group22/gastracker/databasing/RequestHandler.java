@@ -1,18 +1,12 @@
-package group22.gastracker;
+package group22.gastracker.databasing;
 
-import android.app.Application;
 import android.content.Context;
 
 import com.android.volley.*;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.Volley;
 
 /**
- * Request Handler class - manages all http outgoing requests.
- *
- *
+ * Request Handler class - manages all http database requests.
  */
 public class RequestHandler {
     private static RequestHandler instance;
@@ -21,7 +15,7 @@ public class RequestHandler {
     public RequestQueue requestQueue;
 
     //web link to php script
-    public static final String requestURL = "";
+    public static final String url = "https://darji1.myweb.cs.uwindsor.ca/GasTracker/index.php";
 
     public RequestHandler(Context cxt) {
         context = cxt;

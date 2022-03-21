@@ -7,12 +7,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends GlobalActivity {
 
@@ -77,9 +91,34 @@ public class LoginActivity extends GlobalActivity {
                 username = usernameView.getText().toString();
                 password = passwordView.getText().toString();
 
+                // TODO: Do some password verification
+
+
                 /******************************************************
                  * Add inputted credentials to database
                  */
+
+                //make hashmap of what to pass to server
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("type", "user");
+                params.put("username", username.trim());
+                params.put("password", password);
+
+                //make request (be careful of GET, POST or DELETE methods)
+                MakeRequest(Request.Method.POST, params,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String r) {
+                                Log.d("Volley Log", r);
+
+                                Bundle user = Utility.HandleReceivedData(getApplicationContext(), r);
+
+                                // TODO: save user somewhere. Can't save in variable because external variables aren't allowed
+                                //       within this scope unless they're final. So call some function to save it or something
+
+                            }
+                        });
+
 
             }
         });
