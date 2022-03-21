@@ -112,6 +112,8 @@ public class LoginActivity extends GlobalActivity {
                                 Log.d("Volley Log", r);
 
                                 Bundle user = Utility.HandleReceivedData(getApplicationContext(), r);
+                                if (user == null) return;
+
 
                                 // TODO: save user somewhere. Can't save in variable because external variables aren't allowed
                                 //       within this scope unless they're final. So call some function to save it or something

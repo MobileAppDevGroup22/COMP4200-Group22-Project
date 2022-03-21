@@ -29,6 +29,7 @@ public class Utility {
                         //Log.d("Volley Log", r);
 
                         Bundle extractedData = HandleReceivedData(getApplicationContext(), r);
+                        if (extractedData == null) return;
                         //saved extracted data somewhere
                     }
                 });
@@ -82,20 +83,22 @@ public class Utility {
     * when that happens.
     * */
     public static Bundle HandleReceivedData(Context cxt, String s){
-        //Log.d("Volley Log", s);
-        Bundle response = Utility.StringToBundle(s);
-        if (response == null) return null;
-        if (response.getInt("status", 400) >= 400){ //400+ are error codes, don't change this
-            Utility.Toast(cxt, response.getString("data", "Unknown error"));
+        try{
+            //Log.d("Volley Log", s);
+            Bundle response = Utility.StringToBundle(s);
+            if (response == null) return null;
+            if (response.getInt("status", 400) >= 400){ //400+ are error codes, don't change this
+                Utility.Toast(cxt, response.getString("data", "Unknown error"));
+                return null;
+            }
+
+            //successful query
+            if (response.getString("description", "none").equals("Success")){
+                return Utility.StringToBundle(response.getString("data", "none"));
+            }
+
             return null;
-        }
-
-        //successful query
-        if (response.getString("description", "none").equals("Success")){
-            return Utility.StringToBundle(response.getString("data", "none"));
-        }
-
-        return null;
+        } catch (Exception e){ return null; }
     }
 
     //prints given error into logcat
