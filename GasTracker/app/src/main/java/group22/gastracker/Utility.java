@@ -31,8 +31,12 @@ public class Utility {
                     public void onResponse(String r) {
                         //Log.d("Volley Log", r);
 
-                        Bundle extractedData = HandleReceivedData(getApplicationContext(), r);
+                        ArrayList<Bundle> extractedData = HandleReceivedData(getApplicationContext(), r);
                         if (extractedData == null) return;
+
+                        for (Bundle u:extractedData){
+                            Log.d("Bundle Array", u.toString());
+                        }
                         //saved extracted data somewhere
                     }
                 });
