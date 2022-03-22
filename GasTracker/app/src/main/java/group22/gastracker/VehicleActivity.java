@@ -54,12 +54,15 @@ public class VehicleActivity extends GlobalActivity {
         vehicleName = findViewById(R.id.editText_vehicle);
 
         vehicleListView = findViewById(R.id.listView_vehicles);
-        /*
+/*
         arrayList_vehicleList.add("2014 Ford Edge");
         arrayList_vehicleList.add("2006 Toyota Corolla");
         arrayList_vehicleList.add("2006 Honda Civic");
-         */
+*/
+        Log.d("testdatabase", "created");
         getVehicleList();
+        //arrayList_vehicleList
+        //Log.d("testdatabase", "first veh = " + arrayList_vehicleList.get(0));
         adapter_vehicleList = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, arrayList_vehicleList);
         vehicleListView.setAdapter(adapter_vehicleList);
 
@@ -105,9 +108,11 @@ public class VehicleActivity extends GlobalActivity {
     }
 
     protected void getVehicleList(){
+        Log.d("testdatabase", "get vehicles list");
+
         GlobalGasTracker globalData = (GlobalGasTracker) getApplication();
         String username = globalData.getUsername();
-
+        Log.d("testdatabase", "username:" + username);
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("type", "vehicle");
         params.put("username", username);
@@ -116,12 +121,19 @@ public class VehicleActivity extends GlobalActivity {
             new Response.Listener<String>() {
                 @Override
                 public void onResponse(String r) {
-                    //Log.d("Response 1", r);
+                    Log.d("testdatabase", r);
                     ArrayList<Bundle> extractedData = HandleReceivedData(getApplicationContext(), r);
-                    if (extractedData == null)return;
 
+                    if (extractedData == null){
+                        Log.d("testdatabase", "data is null");
+                        return;
+                    }
+
+                    Log.d("testdatabase", "data is NOT null");
                     for(Bundle currentDataBundle : extractedData){
-                        arrayList_vehicleList.add(currentDataBundle.getString("vehiclename", null));
+                        String vehicle = currentDataBundle.getString("vehiclename", null);
+                        Log.d("testdatabase", vehicle);
+                        arrayList_vehicleList.add(vehicle);
                     }
                 }
             });

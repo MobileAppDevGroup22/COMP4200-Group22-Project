@@ -138,7 +138,7 @@ public class Utility {
             }
 
             //successful query
-            if (response.getString("description", "none").equals("Success")){
+            if (response.getInt("status", 0) == 200){
                 return Utility.StringToBundleArray(response.getString("data", "none"));
             }
 
