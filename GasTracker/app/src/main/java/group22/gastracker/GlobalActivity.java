@@ -52,7 +52,14 @@ public class GlobalActivity extends AppCompatActivity {
     protected void MakeRequest(int method, Map<String, String> params, Response.Listener<String> responseListener){
         String url = RequestHandler.url;
         if (method == Request.Method.GET) url = Utility.AttachParamsToUrl(url, params);
+        /*
+        String LogOutput = "";
 
+        LogOutput += "Params: " + params.toString() + "\n";
+        LogOutput += "Url: " + url;
+
+        Log.d("Make Request", LogOutput);
+        */
         requestHandler.addRequest( new StringRequest(method, url, responseListener,
                             new Response.ErrorListener() {
                                 @Override

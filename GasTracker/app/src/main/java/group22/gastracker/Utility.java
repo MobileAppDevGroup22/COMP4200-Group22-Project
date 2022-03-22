@@ -151,7 +151,7 @@ public class Utility {
         for (Map.Entry<String, String> entry : params.entrySet()){
             if (paramCount == 0) url += "?";
             else url += "&";
-
+            paramCount++;
             url += entry.getKey() + "=" + entry.getValue();
         }
         return url;

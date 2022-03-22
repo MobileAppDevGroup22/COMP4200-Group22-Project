@@ -116,6 +116,7 @@ public class VehicleActivity extends GlobalActivity {
             new Response.Listener<String>() {
                 @Override
                 public void onResponse(String r) {
+                    //Log.d("Response 1", r);
                     ArrayList<Bundle> extractedData = HandleReceivedData(getApplicationContext(), r);
                     if (extractedData == null)return;
 
