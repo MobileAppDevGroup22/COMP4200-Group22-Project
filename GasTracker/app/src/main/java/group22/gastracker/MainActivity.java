@@ -1,5 +1,7 @@
 package group22.gastracker;
 
+import static group22.gastracker.Utility.HandleReceivedData;
+
 import androidx.annotation.NonNull;
 
 import android.content.Context;
@@ -16,12 +18,15 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import group22.gastracker.purchases.PurchaseListActivity;
@@ -33,7 +38,8 @@ public class MainActivity extends GlobalActivity {
 
     TextInputLayout vehicleDropDown;
     AutoCompleteTextView vehicleDropDownOptions;
-    List<String> vehicleList = new ArrayList<String>();
+    List<String> arrayList_vehicleList = new ArrayList<String>();
+    List<Integer> arrayList_vehicleIDList = new ArrayList<Integer>();
     ArrayAdapter<String> arrayAdapter_vehicles;
 
     BottomNavigationView bottomNav;
@@ -49,9 +55,13 @@ public class MainActivity extends GlobalActivity {
         getSavedValue();
         updateTheme();
         setContentView(R.layout.activity_main);
-        getSupportActionBar().hide();
+        setTitle("Overview");
 
         this.bottomNavBarHandler();
+
+        //getVehicleList();
+        getStats();
+
         setAddNewEntryButtonHandler();
         seeAllPurchasesButtonHandler();
 
@@ -60,17 +70,17 @@ public class MainActivity extends GlobalActivity {
          *  // vehiclesList.getUsersVehicles();
          */
         //vehicles for testing
-        vehicleList.add("2014 Ford Edge");
-        vehicleList.add("2006 Toyota Corolla");
-        vehicleList.add("2006 Honda Civic");
+        arrayList_vehicleList.add("2014 Ford Edge");
+        arrayList_vehicleList.add("2006 Toyota Corolla");
+        arrayList_vehicleList.add("2006 Honda Civic");
 
         /*******************************************************************************************************
          * Setup vehicle dropdown list bar*/
         vehicleDropDown = findViewById(R.id.textInputLayout);
         vehicleDropDownOptions = findViewById(R.id.vehicle_dropdown);
-        arrayAdapter_vehicles = new ArrayAdapter<>(getApplicationContext(), R.layout.dropdown_item, vehicleList);
+        arrayAdapter_vehicles = new ArrayAdapter<>(getApplicationContext(), R.layout.dropdown_item, arrayList_vehicleList);
         vehicleDropDownOptions.setAdapter(arrayAdapter_vehicles);
-        vehicleDropDownOptions.setText(vehicleList.get(currentVehiclePosition), false);
+        vehicleDropDownOptions.setText(arrayList_vehicleList.get(currentVehiclePosition), false);
 
         vehicleDropDownOptions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -80,6 +90,51 @@ public class MainActivity extends GlobalActivity {
             }
         });
 
+    }
+
+    protected void getStats(){
+        GlobalGasTracker globalData = (GlobalGasTracker) getApplication();
+        String username = globalData.getUsername();
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("type", "stat");
+        params.put("username", username);
+        if(arrayList_vehicleIDList.isEmpty())return;
+        params.put("vehicleid", Integer.toString(arrayList_vehicleIDList.get(currentVehiclePosition)));
+        MakeRequest(Request.Method.GET, params,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String r) {
+
+                        ArrayList<Bundle> extractedData = HandleReceivedData(getApplicationContext(), r);
+                        if (extractedData == null)return;
+
+                    }
+                });
+    }
+
+    protected void getVehicleList(){
+        GlobalGasTracker globalData = (GlobalGasTracker) getApplication();
+        String username = globalData.getUsername();
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("type", "vehicle");
+        params.put("username", username);
+
+        MakeRequest(Request.Method.GET, params,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String r) {
+
+                        ArrayList<Bundle> extractedData = HandleReceivedData(getApplicationContext(), r);
+                        if (extractedData == null)return;
+                        int i = 0;
+                        for(Bundle currentDataBundle : extractedData){
+                            arrayList_vehicleList.add(currentDataBundle.getString("vehiclename", null));
+                            arrayList_vehicleIDList.add(currentDataBundle.getInt("vehicleid", 0));
+                        }
+                    }
+                });
     }
 
     /*******************************************************************************************************

@@ -96,11 +96,6 @@ public class LoginActivity extends GlobalActivity {
 
                 // TODO: Do some password verification
 
-
-                /******************************************************
-                 * Add inputted credentials to database
-                 */
-
                 //make hashmap of what to pass to server
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put("type", "user");
@@ -109,23 +104,23 @@ public class LoginActivity extends GlobalActivity {
 
                 //make request (be careful of GET, POST or DELETE methods)
                 MakeRequest(Request.Method.POST, params,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String r) {
-                                Log.d("Volley Log", r);
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String r) {
+                            Log.d("Volley Log", r);
 
-                                ArrayList<Bundle> users = Utility.HandleReceivedData(getApplicationContext(), r);
-                                if (users == null) return;
+                            ArrayList<Bundle> users = Utility.HandleReceivedData(getApplicationContext(), r);
+                            if (users == null) return;
 
-                                for (Bundle u:users){
-                                    Log.d("Bundle Array", u.toString());
-                                }
-
-                                // TODO: save user somewhere. Can't save in variable because external variables aren't allowed
-                                //       within this scope unless they're final. So call some function to save it or something
-
+                            for (Bundle u:users){
+                                Log.d("Bundle Array", u.toString());
                             }
-                        });
+
+                            // TODO: save user somewhere. Can't save in variable because external variables aren't allowed
+                            //       within this scope unless they're final. So call some function to save it or something
+
+                        }
+                    });
 
 
             }

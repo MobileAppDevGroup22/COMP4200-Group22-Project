@@ -31,7 +31,7 @@ public class Utility {
                     public void onResponse(String r) {
                         //Log.d("Volley Log", r);
 
-                        Bundle extractedData = HandleReceivedData(getApplicationContext(), r);
+                        ArrayList<Bundle> extractedData = HandleReceivedData(getApplicationContext(), r);
                         if (extractedData == null) return;
                         //saved extracted data somewhere
                     }

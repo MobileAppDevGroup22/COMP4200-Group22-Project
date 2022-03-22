@@ -47,7 +47,7 @@ public class SettingsActivity extends GlobalActivity {
         getSavedValue();
         updateTheme();
         setContentView(R.layout.activity_settings);
-        getSupportActionBar().hide();
+        setTitle("Settings");
         this.bottomNavBarHandler();
 
         themeSelectButton = findViewById(R.id.button_themeSelect);

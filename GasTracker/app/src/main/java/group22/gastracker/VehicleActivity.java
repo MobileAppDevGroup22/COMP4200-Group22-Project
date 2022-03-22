@@ -9,10 +9,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -33,7 +35,7 @@ public class VehicleActivity extends GlobalActivity {
     SharedPreferences sharedPreferences;
 
     Button addVehicleButton;
-
+    EditText vehicleName;
     ListView vehicleListView;
     ArrayList<String> arrayList_vehicleList = new ArrayList<>();
     ArrayAdapter<String> adapter_vehicleList;
@@ -44,10 +46,12 @@ public class VehicleActivity extends GlobalActivity {
         getSavedValue();
         updateTheme();
         setContentView(R.layout.activity_vehicle);
+        setTitle("Vehicles");
         this.bottomNavBarHandler();
         GlobalGasTracker globalData = (GlobalGasTracker) getApplication();
 
         addVehicleButton = findViewById(R.id.button_addVehicle);
+        vehicleName = findViewById(R.id.editText_vehicle);
 
         vehicleListView = findViewById(R.id.listView_vehicles);
         /*
@@ -62,34 +66,64 @@ public class VehicleActivity extends GlobalActivity {
         addVehicleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String username = globalData.getUsername();
-                Toast toast = Toast.makeText(getApplicationContext(), username, Toast.LENGTH_SHORT);
-                toast.show();
+                String newVehicle = vehicleName.getText().toString();
+                if(!newVehicle.equals("")){
+                    addVehicle(newVehicle);
+                }
+                finish();
+                startActivity(getIntent());
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
         });
 
     }
 
+    protected void addVehicle(String vehicleName){
+        GlobalGasTracker globalData = (GlobalGasTracker) getApplication();
+        String username = globalData.getUsername();
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("type", "vehicle");
+        params.put("username", username);
+        params.put("vehiclename", vehicleName);
+
+        //make request (be careful of GET, POST or DELETE methods)
+        MakeRequest(Request.Method.POST, params,
+                new Response.Listener<String>() {
+                @Override
+                public void onResponse(String r) {
+                    Log.d("Volley Log", r);
+
+                    ArrayList<Bundle> vehicles = Utility.HandleReceivedData(getApplicationContext(), r);
+                    if (vehicles == null) return;
+
+                    for (Bundle u:vehicles){
+                        Log.d("Bundle Array", u.toString());
+                    }
+                }
+            });
+    }
+
     protected void getVehicleList(){
         GlobalGasTracker globalData = (GlobalGasTracker) getApplication();
         String username = globalData.getUsername();
-/*
+
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("type", "vehicle");
         params.put("username", username);
 
-        MakeRequest(Request.Method.POST, params,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String r) {
-                        //Log.d("Volley Log", r);
+        MakeRequest(Request.Method.GET, params,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String r) {
+                    ArrayList<Bundle> extractedData = HandleReceivedData(getApplicationContext(), r);
+                    if (extractedData == null)return;
 
-                        Bundle extractedData = HandleReceivedData(getApplicationContext(), r);
-                        if (extractedData == null)return;
-
-                        arrayList_vehicleList =
+                    for(Bundle currentDataBundle : extractedData){
+                        arrayList_vehicleList.add(currentDataBundle.getString("vehiclename", null));
                     }
-                });*/
+                }
+            });
     }
 
     /*******************************************************************************************************

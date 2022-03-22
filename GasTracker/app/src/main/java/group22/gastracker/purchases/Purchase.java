@@ -10,6 +10,9 @@ public class Purchase {
     private String description;
     private double amount;
 
+    public Purchase(){
+    }
+
     public Purchase(String date, String description, double amount){
         this.date = date;
         this.description = description;
