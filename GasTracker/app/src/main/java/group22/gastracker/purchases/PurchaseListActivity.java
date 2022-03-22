@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,6 +31,9 @@ public class PurchaseListActivity extends GlobalActivity {
     TextView noPurchasesText;
     ListView purchaseListView;
 
+    int currentVehicleID;
+    String currentVehicle;
+
     int currentTheme = 0;
     boolean darkMode = false;
     SharedPreferences sharedPreferences;
@@ -46,38 +50,28 @@ public class PurchaseListActivity extends GlobalActivity {
         purchaseListView = findViewById(R.id.listView_PurchaseList);
 
         Bundle passedValues = getIntent().getExtras();
-        String currentVehicle = passedValues.getString("CurrentVehicle");
+        currentVehicleID = passedValues.getInt("currentVehicleID");
+        currentVehicle = passedValues.getString("currentVehicle");
         purchasesTitle.setText("Purchases - " + currentVehicle);
-
         getPurchaseList();
 
         /********
          * Add code to populate list of purchases from database
          */
-        arrayList_Purchases.add(new Purchase("2022-03-01", "Gas", 43.17));
-        arrayList_Purchases.add(new Purchase("2022-03-05", "Insurance", 102.60));
-        arrayList_Purchases.add(new Purchase("2022-03-06", "Gas", 24.53));
-        arrayList_Purchases.add(new Purchase("2022-03-08", "Gas", 62.89));
-        arrayList_Purchases.add(new Purchase("2022-03-13", "Repair", 506.36));
-        arrayList_Purchases.add(new Purchase("2022-03-17", "Gas", 12.36));
-        arrayList_Purchases.add(new Purchase("2022-03-01", "Gas", 43.17));
-        arrayList_Purchases.add(new Purchase("2022-03-05", "Insurance", 102.60));
-        arrayList_Purchases.add(new Purchase("2022-03-06", "Gas", 24.53));
-        arrayList_Purchases.add(new Purchase("2022-03-08", "Gas", 62.89));
-        arrayList_Purchases.add(new Purchase("2022-03-13", "Repair", 506.36));
-        arrayList_Purchases.add(new Purchase("2022-03-17", "Gas", 12.36));
-        arrayList_Purchases.add(new Purchase("2022-03-01", "Gas", 43.17));
-        arrayList_Purchases.add(new Purchase("2022-03-05", "Insurance", 102.60));
-        arrayList_Purchases.add(new Purchase("2022-03-06", "Gas", 24.53));
-        arrayList_Purchases.add(new Purchase("2022-03-08", "Gas", 62.89));
-        arrayList_Purchases.add(new Purchase("2022-03-13", "Repair", 506.36));
-        arrayList_Purchases.add(new Purchase("2022-03-17", "Gas", 12.36));
-        arrayList_Purchases.add(new Purchase("2022-03-01", "Gas", 43.17));
-        arrayList_Purchases.add(new Purchase("2022-03-05", "Insurance", 102.60));
-        arrayList_Purchases.add(new Purchase("2022-03-06", "Gas", 24.53));
-        arrayList_Purchases.add(new Purchase("2022-03-08", "Gas", 62.89));
-        arrayList_Purchases.add(new Purchase("2022-03-13", "Repair", 506.36));
-        arrayList_Purchases.add(new Purchase("2022-03-17", "Gas", 12.36));
+
+
+
+    }
+
+    protected void PurchaseListFunctions(ArrayList<Bundle> extractedData){
+
+        for(Bundle currentDataBundle : extractedData){
+            Purchase purchase = new Purchase();
+            purchase.setDescription(currentDataBundle.getString("purchasetype", "misc"));
+            purchase.setAmount(currentDataBundle.getFloat("amountspent", 0));
+            purchase.setDate(currentDataBundle.getString("dateofpurchase", "0000-00-00"));
+            arrayList_Purchases.add(purchase);
+        }
 
         if(arrayList_Purchases.isEmpty()){
             noPurchasesText.setVisibility(View.VISIBLE);
@@ -85,6 +79,7 @@ public class PurchaseListActivity extends GlobalActivity {
             purchaseListAdapter = new PurchaseListAdapter(getApplicationContext(), R.layout.list_adapter_layout, arrayList_Purchases);
             purchaseListView.setAdapter(purchaseListAdapter);
         }
+
     }
 
     protected void getPurchaseList(){
@@ -102,14 +97,7 @@ public class PurchaseListActivity extends GlobalActivity {
 
                     ArrayList<Bundle> extractedData = HandleReceivedData(getApplicationContext(), r);
                     if (extractedData == null)return;
-
-                    for(Bundle currentDataBundle : extractedData){
-                        Purchase purchase = new Purchase();
-                        purchase.setDescription(currentDataBundle.getString("purchasetype", "misc"));
-                        purchase.setAmount(currentDataBundle.getFloat("amountspent", 0));
-                        purchase.setDate(currentDataBundle.getString("dateofpurchase", "0000-00-00"));
-                        arrayList_Purchases.add(purchase);
-                    }
+                    PurchaseListFunctions(extractedData);
                 }
             });
     }

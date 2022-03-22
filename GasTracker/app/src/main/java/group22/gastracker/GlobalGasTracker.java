@@ -23,7 +23,4 @@ public class GlobalGasTracker extends Application {
     public void setVehicleList(ArrayList<String> vehicleList) {
         this.vehicleList = vehicleList;
     }
-    public void addVehicle(String vehicle) {
-        vehicleList.add(vehicle);
-    }
 }

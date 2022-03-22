@@ -8,8 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -38,7 +40,8 @@ public class MainActivity extends GlobalActivity {
 
     TextInputLayout vehicleDropDown;
     AutoCompleteTextView vehicleDropDownOptions;
-    List<String> arrayList_vehicleList = new ArrayList<String>();
+    ArrayList<String> arrayList_dataList = new ArrayList<String>();
+    ArrayList<String> arrayList_vehicleList = new ArrayList<String>();
     List<Integer> arrayList_vehicleIDList = new ArrayList<Integer>();
     ArrayAdapter<String> arrayAdapter_vehicles;
 
@@ -52,33 +55,39 @@ public class MainActivity extends GlobalActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        GlobalGasTracker globalData = (GlobalGasTracker) getApplication();
         getSavedValue();
         updateTheme();
         setContentView(R.layout.activity_main);
         setTitle("Overview");
 
         this.bottomNavBarHandler();
-
-        //getVehicleList();
+        getVehicleList();
         getStats();
-
-        setAddNewEntryButtonHandler();
-        seeAllPurchasesButtonHandler();
-
-        /******************************************
-         * Add method to get the users vehicles from database
-         *  // vehiclesList.getUsersVehicles();
-         */
-        //vehicles for testing
-        arrayList_vehicleList.add("2014 Ford Edge");
-        arrayList_vehicleList.add("2006 Toyota Corolla");
-        arrayList_vehicleList.add("2006 Honda Civic");
 
         /*******************************************************************************************************
          * Setup vehicle dropdown list bar*/
         vehicleDropDown = findViewById(R.id.textInputLayout);
         vehicleDropDownOptions = findViewById(R.id.vehicle_dropdown);
-        arrayAdapter_vehicles = new ArrayAdapter<>(getApplicationContext(), R.layout.dropdown_item, arrayList_vehicleList);
+        seeAllPurchasesButton = findViewById(R.id.button_seeAllPurchases);
+
+    }
+
+    protected void MainFunctions(ArrayList<Bundle> extractedData){
+
+        for(Bundle currentDataBundle : extractedData){
+            String vehicle = currentDataBundle.getString("vehiclename", null);
+            Log.d("testdatabase", vehicle);
+            arrayList_vehicleList.add(vehicle);
+        }
+
+        setAddNewEntryButtonHandler();
+
+
+        vehicleDropDown = findViewById(R.id.textInputLayout);
+        vehicleDropDownOptions = findViewById(R.id.vehicle_dropdown);
+
+        arrayAdapter_vehicles = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, arrayList_vehicleList);
         vehicleDropDownOptions.setAdapter(arrayAdapter_vehicles);
         vehicleDropDownOptions.setText(arrayList_vehicleList.get(currentVehiclePosition), false);
 
@@ -90,8 +99,18 @@ public class MainActivity extends GlobalActivity {
             }
         });
 
+        seeAllPurchasesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int vehicleID = extractedData.get(currentVehiclePosition).getInt("vehicleid", -1);
+                seeAllPurchasesButtonHandler(vehicleID);
+            }
+        });
+
     }
 
+    /*******************************************************************************************************
+     * Database calls*/
     protected void getStats(){
         GlobalGasTracker globalData = (GlobalGasTracker) getApplication();
         String username = globalData.getUsername();
@@ -105,10 +124,8 @@ public class MainActivity extends GlobalActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String r) {
-
                         ArrayList<Bundle> extractedData = HandleReceivedData(getApplicationContext(), r);
                         if (extractedData == null)return;
-
                     }
                 });
     }
@@ -116,25 +133,49 @@ public class MainActivity extends GlobalActivity {
     protected void getVehicleList(){
         GlobalGasTracker globalData = (GlobalGasTracker) getApplication();
         String username = globalData.getUsername();
-
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("type", "vehicle");
         params.put("username", username);
-
         MakeRequest(Request.Method.GET, params,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String r) {
-
                         ArrayList<Bundle> extractedData = HandleReceivedData(getApplicationContext(), r);
+
                         if (extractedData == null)return;
-                        int i = 0;
-                        for(Bundle currentDataBundle : extractedData){
-                            arrayList_vehicleList.add(currentDataBundle.getString("vehiclename", null));
-                            arrayList_vehicleIDList.add(currentDataBundle.getInt("vehicleid", 0));
-                        }
+
+
+                        /*
+                        arrayAdapter_vehicles = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, arrayList_vehicleList);
+                        vehicleDropDownOptions.setAdapter(arrayAdapter_vehicles);
+                        vehicleDropDownOptions.setText(arrayList_vehicleList.get(currentVehiclePosition), false);
+                        */
+                        MainFunctions(extractedData);
+                        return;
                     }
                 });
+    }
+
+
+    /*******************************************************************************************************
+     * see all purchases button*/
+    protected void seeAllPurchasesButtonHandler(int vehicleID){
+        Log.d("checkvehicleid", "v id = " + vehicleID);
+        Intent intent = new Intent(getApplicationContext(), PurchaseListActivity.class);
+        intent.putExtra("currentVehicle", vehicleDropDown.getEditText().getText().toString());
+        intent.putExtra("currentVehicleID", vehicleID);
+        startActivity(intent);
+    }
+    /*******************************************************************************************************
+     * add new entry button*/
+    protected void setAddNewEntryButtonHandler(){
+        addNewEntryButton = findViewById(R.id.actionButton_addEntry);
+        addNewEntryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), vehicleDropDownOptions.getText().toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /*******************************************************************************************************
@@ -161,30 +202,6 @@ public class MainActivity extends GlobalActivity {
                         break;
                 }
                 return true;
-            }
-        });
-    }
-    /*******************************************************************************************************
-     * see all purchases button*/
-    protected void seeAllPurchasesButtonHandler(){
-        seeAllPurchasesButton = findViewById(R.id.button_seeAllPurchases);
-        seeAllPurchasesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent purchaseListActivity_intent = new Intent(MainActivity.this, PurchaseListActivity.class);
-                purchaseListActivity_intent.putExtra("CurrentVehicle", vehicleDropDown.getEditText().getText().toString());
-                startActivity(purchaseListActivity_intent);
-            }
-        });
-    }
-    /*******************************************************************************************************
-     * add new entry button*/
-    protected void setAddNewEntryButtonHandler(){
-        addNewEntryButton = findViewById(R.id.actionButton_addEntry);
-        addNewEntryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), vehicleDropDownOptions.getText().toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
