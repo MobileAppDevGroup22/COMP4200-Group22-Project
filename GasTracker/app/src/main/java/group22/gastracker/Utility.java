@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Utility {
@@ -36,12 +38,48 @@ public class Utility {
                 });
     */
 
-    //parses given string and
+    //parses given string and returns arraylist of bundles with data
+    public static ArrayList<Bundle> StringToBundleArray(String jsonObjectAsString){
+        Log.d("Testing", jsonObjectAsString);
+        try {
+            ArrayList<Bundle> allData = new ArrayList<Bundle>();
+            JSONArray jsonArray = new JSONArray(jsonObjectAsString);
+            for (int i = 0; i < jsonArray.length(); i++){
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                Bundle bundle = new Bundle();
+                Iterator<String> iterator = jsonObject.keys();
+
+                while(iterator.hasNext()){
+                    String key = (String)iterator.next();
+                    String value = jsonObject.getString(key);
+
+                    int tmp_int = StringToInt(value, DEFAULT_INT);
+                    if (tmp_int != DEFAULT_INT){
+                        bundle.putInt(key, tmp_int);
+                        continue;
+                    }
+
+                    double tmp_double = StringToDouble(value, DEFAULT_DOUBLE);
+                    if (tmp_double != DEFAULT_DOUBLE){
+                        bundle.putDouble(key, tmp_double);
+                        continue;
+                    }
+
+                    bundle.putString(key, value);
+                }
+                allData.add(bundle);
+            }
+            return allData;
+        } catch (Exception e) { return null; }
+    }
+
     public static Bundle StringToBundle(String jsonObjectAsString){
+        Log.d("Testing", jsonObjectAsString);
         try {
             JSONObject jsonObject = new JSONObject(jsonObjectAsString);
             Bundle bundle = new Bundle();
             Iterator<String> iterator = jsonObject.keys();
+
             while(iterator.hasNext()){
                 String key = (String)iterator.next();
                 String value = jsonObject.getString(key);
@@ -60,6 +98,7 @@ public class Utility {
 
                 bundle.putString(key, value);
             }
+
             return bundle;
         } catch (Exception e) { return null; }
     }
@@ -83,7 +122,7 @@ public class Utility {
     * or returns null if error occurred. Generally displays toast with error
     * when that happens.
     * */
-    public static Bundle HandleReceivedData(Context cxt, String s){
+    public static ArrayList<Bundle> HandleReceivedData(Context cxt, String s){
         try{
             //Log.d("Volley Log", s);
             Bundle response = Utility.StringToBundle(s);
@@ -95,7 +134,7 @@ public class Utility {
 
             //successful query
             if (response.getString("description", "none").equals("Success")){
-                return Utility.StringToBundle(response.getString("data", "none"));
+                return Utility.StringToBundleArray(response.getString("data", "none"));
             }
 
             return null;
