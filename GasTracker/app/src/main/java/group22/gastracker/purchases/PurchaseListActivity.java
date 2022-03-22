@@ -1,5 +1,7 @@
 package group22.gastracker.purchases;
 
+import static group22.gastracker.Utility.HandleReceivedData;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -9,11 +11,17 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.android.volley.Request;
+import com.android.volley.Response;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import group22.gastracker.GlobalActivity;
+import group22.gastracker.GlobalGasTracker;
 import group22.gastracker.R;
 
-public class PurchaseListActivity extends AppCompatActivity {
+public class PurchaseListActivity extends GlobalActivity {
 
     ArrayList<Purchase> arrayList_Purchases = new ArrayList<>();
     PurchaseListAdapter purchaseListAdapter;
@@ -40,6 +48,8 @@ public class PurchaseListActivity extends AppCompatActivity {
         Bundle passedValues = getIntent().getExtras();
         String currentVehicle = passedValues.getString("CurrentVehicle");
         purchasesTitle.setText("Purchases - " + currentVehicle);
+
+        getPurchaseList();
 
         /********
          * Add code to populate list of purchases from database
@@ -75,6 +85,33 @@ public class PurchaseListActivity extends AppCompatActivity {
             purchaseListAdapter = new PurchaseListAdapter(getApplicationContext(), R.layout.list_adapter_layout, arrayList_Purchases);
             purchaseListView.setAdapter(purchaseListAdapter);
         }
+    }
+
+    protected void getPurchaseList(){
+        GlobalGasTracker globalData = (GlobalGasTracker) getApplication();
+        String username = globalData.getUsername();
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("type", "purchase");
+        params.put("username", username);
+
+        MakeRequest(Request.Method.GET, params,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String r) {
+
+                    ArrayList<Bundle> extractedData = HandleReceivedData(getApplicationContext(), r);
+                    if (extractedData == null)return;
+
+                    for(Bundle currentDataBundle : extractedData){
+                        Purchase purchase = new Purchase();
+                        purchase.setDescription(currentDataBundle.getString("purchasetype", "misc"));
+                        purchase.setAmount(currentDataBundle.getFloat("amountspent", 0));
+                        purchase.setDate(currentDataBundle.getString("dateofpurchase", "0000-00-00"));
+                        arrayList_Purchases.add(purchase);
+                    }
+                }
+            });
     }
 
     protected void getSavedValue(){
