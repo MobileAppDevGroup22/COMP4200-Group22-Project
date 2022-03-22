@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 
 public class Utility {
 
@@ -143,6 +144,17 @@ public class Utility {
 
             return null;
         } catch (Exception e){ return null; }
+    }
+
+    public static String AttachParamsToUrl(String url, Map<String, String> params){
+        int paramCount = 0;
+        for (Map.Entry<String, String> entry : params.entrySet()){
+            if (paramCount == 0) url += "?";
+            else url += "&";
+
+            url += entry.getKey() + "=" + entry.getValue();
+        }
+        return url;
     }
 
     //prints given error into logcat

@@ -50,7 +50,10 @@ public class GlobalActivity extends AppCompatActivity {
     // function to streamline database communication
     // pass in request type (e.g. Request.Method.POST), params as JSON object, response listener and error listener
     protected void MakeRequest(int method, Map<String, String> params, Response.Listener<String> responseListener){
-        requestHandler.addRequest( new StringRequest(method, RequestHandler.url, responseListener,
+        String url = RequestHandler.url;
+        if (method == Request.Method.GET) url = Utility.AttachParamsToUrl(url, params);
+
+        requestHandler.addRequest( new StringRequest(method, url, responseListener,
                             new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
@@ -73,6 +76,7 @@ public class GlobalActivity extends AppCompatActivity {
                                    @Override
                                    protected Map<String, String> getParams() throws AuthFailureError {
                                         Log.d("Params", params.toString());
+
                                         return params;
                                    }
                             }
