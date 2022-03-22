@@ -3,16 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="16dp">
+    android:layout_height="match_parent">
 
     <TableLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_margin="32dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="64dp"
         android:background="#FFFFFF"
-        android:elevation="10dp"
-        android:padding="4dp"
+        android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,30 +24,30 @@
 
             <Button
                 android:id="@+id/button_purple"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:backgroundTint="@color/purple"
                 android:insetTop="0dp"
-                android:insetBottom="0dp" />
+                android:insetBottom="0dp"
+                app:cornerRadius="0dp" />
 
             <Button
                 android:id="@+id/button_blue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:backgroundTint="@color/blue"
                 android:insetTop="0dp"
-                android:insetBottom="0dp" />
+                android:insetBottom="0dp"
+                app:cornerRadius="0dp" />
 
             <Button
                 android:id="@+id/button_yellow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:backgroundTint="@color/yellow"
                 android:insetTop="0dp"
-                android:insetBottom="0dp" />
+                android:insetBottom="0dp"
+                app:cornerRadius="0dp" />
         </TableRow>
 
         <TableRow
@@ -58,30 +57,30 @@
 
             <Button
                 android:id="@+id/button_red"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:backgroundTint="@color/red"
                 android:insetTop="0dp"
-                android:insetBottom="0dp" />
+                android:insetBottom="0dp"
+                app:cornerRadius="0dp" />
 
             <Button
                 android:id="@+id/button_green"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:backgroundTint="@color/green"
                 android:insetTop="0dp"
-                android:insetBottom="0dp" />
+                android:insetBottom="0dp"
+                app:cornerRadius="0dp" />
 
             <Button
                 android:id="@+id/button_pink"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:backgroundTint="@color/pink"
                 android:insetTop="0dp"
-                android:insetBottom="0dp" />
+                android:insetBottom="0dp"
+                app:cornerRadius="0dp" />
         </TableRow>
 
     </TableLayout>

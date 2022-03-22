@@ -39,6 +39,7 @@ public class LoginActivity extends GlobalActivity {
     String username, password;
     Boolean isRemember;
 
+    boolean darkMode = false;
     int currentTheme = 0;
 
     @Override
@@ -48,7 +49,7 @@ public class LoginActivity extends GlobalActivity {
         updateTheme();
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
-
+        GlobalGasTracker globalData = (GlobalGasTracker) getApplication();
         usernameView = findViewById(R.id.editText_Username);
         passwordView = findViewById(R.id.editText_Password);
         rememberCheck = findViewById(R.id.checkBox_Remember);
@@ -79,7 +80,8 @@ public class LoginActivity extends GlobalActivity {
                 /******************************************************
                  * Check database to see if credentials are correct
                  */
-
+                username = usernameView.getText().toString();
+                globalData.setUsername(username);
                 Intent main_intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(main_intent);
 
@@ -177,23 +179,42 @@ public class LoginActivity extends GlobalActivity {
     protected void getSavedTheme(){
         sharedPreferences = getSharedPreferences("themeInfo", Context.MODE_PRIVATE);
         currentTheme = sharedPreferences.getInt("currentTheme", 0);
+        darkMode = sharedPreferences.getBoolean("darkMode", false);
     }
 
     public void updateTheme(){
-        if(currentTheme == 0){
-            setTheme(R.style.purple);
-        }else if(currentTheme == 1){
-            setTheme(R.style.blue);
-        }else if(currentTheme == 2){
-            setTheme(R.style.yellow);
-        }else if(currentTheme == 3){
-            setTheme(R.style.red);
-        }else if(currentTheme == 4){
-            setTheme(R.style.green);
-        }else if(currentTheme == 5){
-            setTheme(R.style.pink);
+        if(darkMode){
+            setTheme(R.style.Theme_GasTrackerDark);
+            if(currentTheme == 0)
+                setTheme(R.style.purpleDark);
+            else if(currentTheme == 1)
+                setTheme(R.style.blueDark);
+            else if(currentTheme == 2)
+                setTheme(R.style.yellowDark);
+            else if(currentTheme == 3)
+                setTheme(R.style.redDark);
+            else if(currentTheme == 4)
+                setTheme(R.style.greenDark);
+            else if(currentTheme == 5)
+                setTheme(R.style.pinkDark);
+            else
+                setTheme(R.style.purpleDark);
         }else{
-            setTheme(R.style.purple);
+            setTheme(R.style.Theme_GasTracker);
+            if(currentTheme == 0)
+                setTheme(R.style.purple);
+            else if(currentTheme == 1)
+                setTheme(R.style.blue);
+            else if(currentTheme == 2)
+                setTheme(R.style.yellow);
+            else if(currentTheme == 3)
+                setTheme(R.style.red);
+            else if(currentTheme == 4)
+                setTheme(R.style.green);
+            else if(currentTheme == 5)
+                setTheme(R.style.pink);
+            else
+                setTheme(R.style.purple);
         }
     }
 

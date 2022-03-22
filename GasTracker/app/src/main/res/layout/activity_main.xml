@@ -21,7 +21,8 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu"
-        app:labelVisibilityMode="unlabeled"/>
+        app:labelVisibilityMode="unlabeled"
+        app:itemIconTint="@drawable/bottom_nav_icon_color"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
@@ -44,13 +45,15 @@
         android:paddingTop="8dp"
         android:paddingBottom="12dp"
         android:paddingLeft="12dp"
-        android:paddingRight="12dp">
+        android:paddingRight="12dp"
+        android:textColor="?android:attr/textColor">
 
         <AutoCompleteTextView
             android:id="@+id/vehicle_dropdown"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="none"/>.
+            android:inputType="none"
+            android:textColor="?android:attr/textColor"/>.
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -81,11 +84,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.35"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+        android:background="?android:attr/colorAccent"
+        app:cardBackgroundColor="@android:color/transparent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="?android:attr/colorAccent">
 
             <TextView
                 android:id="@+id/textView_past30Days"
@@ -128,7 +134,7 @@
                 android:id="@+id/view"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#002222"
+                android:background="?android:attr/textColor"
                 app:layout_constraintBottom_toTopOf="@+id/button_seeAllPurchases"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -137,13 +143,13 @@
                 android:id="@+id/button_seeAllPurchases"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/design_default_color_background"
+                android:backgroundTint="?android:attr/colorAccent"
                 android:includeFontPadding="false"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:text="See all purchases"
                 android:textAllCaps="false"
-                android:textColor="?android:colorPrimary"
+                android:textColor="?android:attr/textColor"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -168,14 +174,15 @@
             android:layout_height="0dp"
             android:layout_margin="8dp"
             android:layout_marginBottom="20dp"
-            app:cardCornerRadius="15dp"
+            app:cardBackgroundColor="@android:color/transparent"
             app:cardElevation="10dp"
             app:layout_columnWeight="1"
             app:layout_rowWeight="1">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@drawable/square_background">
 
                 <TextView
                     android:id="@+id/textView5"
@@ -207,12 +214,14 @@
             android:layout_marginBottom="20dp"
             app:cardCornerRadius="15dp"
             app:cardElevation="10dp"
+            app:cardBackgroundColor="@android:color/transparent"
             app:layout_columnWeight="1"
             app:layout_rowWeight="1">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@drawable/square_background">
 
                 <TextView
                     android:id="@+id/textView3"

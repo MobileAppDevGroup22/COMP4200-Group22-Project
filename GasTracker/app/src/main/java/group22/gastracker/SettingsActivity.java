@@ -37,6 +37,7 @@ public class SettingsActivity extends GlobalActivity {
     Button greenButton;
     Button pinkButton;
 
+    boolean darkMode;
     int currentTheme;
     SharedPreferences sharedPreferences;
 
@@ -51,6 +52,9 @@ public class SettingsActivity extends GlobalActivity {
 
         themeSelectButton = findViewById(R.id.button_themeSelect);
         darkModeSwitch = findViewById(R.id.switch_DarkMode);
+        if(darkMode){
+            darkModeSwitch.setChecked(true);
+        }
 
         themeSelectButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +66,12 @@ public class SettingsActivity extends GlobalActivity {
         darkModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-
+                if(checked){
+                    darkMode = true;
+                }else{
+                    darkMode = false;
+                }
+                saveValue();
             }
         });
 
@@ -163,20 +172,38 @@ public class SettingsActivity extends GlobalActivity {
     public void onBackPressed() {}
 
     public void updateTheme(){
-        if(currentTheme == 0){
-            setTheme(R.style.purple);
-        }else if(currentTheme == 1){
-            setTheme(R.style.blue);
-        }else if(currentTheme == 2){
-            setTheme(R.style.yellow);
-        }else if(currentTheme == 3){
-            setTheme(R.style.red);
-        }else if(currentTheme == 4){
-            setTheme(R.style.green);
-        }else if(currentTheme == 5){
-            setTheme(R.style.pink);
+        if(darkMode){
+            setTheme(R.style.Theme_GasTrackerDark);
+            if(currentTheme == 0)
+                setTheme(R.style.purpleDark);
+            else if(currentTheme == 1)
+                setTheme(R.style.blueDark);
+            else if(currentTheme == 2)
+                setTheme(R.style.yellowDark);
+            else if(currentTheme == 3)
+                setTheme(R.style.redDark);
+            else if(currentTheme == 4)
+                setTheme(R.style.greenDark);
+            else if(currentTheme == 5)
+                setTheme(R.style.pinkDark);
+            else
+                setTheme(R.style.purpleDark);
         }else{
-            setTheme(R.style.purple);
+            setTheme(R.style.Theme_GasTracker);
+            if(currentTheme == 0)
+                setTheme(R.style.purple);
+            else if(currentTheme == 1)
+                setTheme(R.style.blue);
+            else if(currentTheme == 2)
+                setTheme(R.style.yellow);
+            else if(currentTheme == 3)
+                setTheme(R.style.red);
+            else if(currentTheme == 4)
+                setTheme(R.style.green);
+            else if(currentTheme == 5)
+                setTheme(R.style.pink);
+            else
+                setTheme(R.style.purple);
         }
     }
 
@@ -184,6 +211,7 @@ public class SettingsActivity extends GlobalActivity {
         sharedPreferences = getSharedPreferences("themeInfo", Context.MODE_PRIVATE);
         SharedPreferences.Editor sharedPrefEditor = sharedPreferences.edit();
         sharedPrefEditor.putInt("currentTheme", currentTheme);
+        sharedPrefEditor.putBoolean("darkMode", darkMode);
         sharedPrefEditor.commit();
         finish();
         startActivity(getIntent());
@@ -193,6 +221,7 @@ public class SettingsActivity extends GlobalActivity {
     protected void getSavedValue(){
         sharedPreferences = getSharedPreferences("themeInfo", Context.MODE_PRIVATE);
         currentTheme = sharedPreferences.getInt("currentTheme", 0);
+        darkMode = sharedPreferences.getBoolean("darkMode", false);
     }
 
 }
