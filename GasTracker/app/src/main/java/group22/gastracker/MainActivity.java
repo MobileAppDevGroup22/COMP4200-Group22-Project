@@ -8,17 +8,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
+import android.app.Dialog;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -28,6 +30,7 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,11 +39,13 @@ import group22.gastracker.purchases.PurchaseListActivity;
 public class MainActivity extends GlobalActivity {
 
     FloatingActionButton addNewEntryButton;
-    Button seeAllPurchasesButton;
+    Button seeAllPurchasesButton, newPurchaseButton;
+    Spinner purchaseType;
+    EditText purchaseCost, gasPrice;
 
+    LinearLayout gasCostLayout;
     TextInputLayout vehicleDropDown;
     AutoCompleteTextView vehicleDropDownOptions;
-    ArrayList<String> arrayList_dataList = new ArrayList<String>();
     ArrayList<String> arrayList_vehicleList = new ArrayList<String>();
     List<Integer> arrayList_vehicleIDList = new ArrayList<Integer>();
     ArrayAdapter<String> arrayAdapter_vehicles;
@@ -51,6 +56,7 @@ public class MainActivity extends GlobalActivity {
     int currentTheme = 0;
     boolean darkMode = false;
     SharedPreferences sharedPreferences;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +77,7 @@ public class MainActivity extends GlobalActivity {
         vehicleDropDownOptions = findViewById(R.id.vehicle_dropdown);
         seeAllPurchasesButton = findViewById(R.id.button_seeAllPurchases);
 
+
     }
 
     protected void MainFunctions(ArrayList<Bundle> extractedData){
@@ -81,9 +88,7 @@ public class MainActivity extends GlobalActivity {
             arrayList_vehicleList.add(vehicle);
         }
 
-        setAddNewEntryButtonHandler();
-
-
+        addNewEntryButton = findViewById(R.id.actionButton_addEntry);
         vehicleDropDown = findViewById(R.id.textInputLayout);
         vehicleDropDownOptions = findViewById(R.id.vehicle_dropdown);
 
@@ -107,6 +112,56 @@ public class MainActivity extends GlobalActivity {
             }
         });
 
+        addNewEntryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast toast = Toast.makeText(getApplicationContext(), "PRESSED", Toast.LENGTH_SHORT);
+                showNewPurchaseDialog();
+            }
+        });
+
+    }
+
+    void showNewPurchaseDialog(){
+
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.new_purchase_dialog);
+
+
+        purchaseType = dialog.findViewById(R.id.spinner_purchaseType);
+        purchaseCost = dialog.findViewById(R.id.editText_purchaseCost);
+        gasPrice = dialog.findViewById(R.id.editText_gasPrice);
+        newPurchaseButton = dialog.findViewById(R.id.button_newPurchase);
+        gasCostLayout = dialog.findViewById(R.id.LinearLayout_gasCost);
+
+        ArrayList<String> purchaseTypeOptions = new ArrayList<String>(Arrays.asList("Gas", "General Repair", "Oil Change", "Insurance", "Misc"));
+        ArrayAdapter<String> purchaseAdapter = new ArrayAdapter<String>(this, R.layout.dropdown_item, purchaseTypeOptions);
+        purchaseType.setAdapter(purchaseAdapter);
+        purchaseType.setSelection(0);
+
+        purchaseType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int selectedItem, long l) {
+                if(selectedItem == 0){
+                    gasCostLayout.setVisibility(View.VISIBLE);
+                }else{
+                    gasCostLayout.setVisibility(View.GONE);
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
+
+        newPurchaseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     /*******************************************************************************************************
