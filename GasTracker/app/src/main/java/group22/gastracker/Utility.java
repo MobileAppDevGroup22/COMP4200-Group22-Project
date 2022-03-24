@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -16,7 +17,8 @@ public class Utility {
 
     public static final int DEFAULT_INT = -214748364;
     public static final double DEFAULT_DOUBLE= -21.2345373;
-
+    public static final ArrayList<String> INT_KEYS = new ArrayList<String>(Arrays.asList("vehicleid", "purchaseid", "statid", "status"));
+    public static final ArrayList<String> DOUBLE_KEYS = new ArrayList<String>(Arrays.asList("purchasedata", "statvalue", "amountspent"));
     /*
     *   TEMPLATE CODE FOR MAKING REQUESTS TO DATABASE - Make sure MakeRequest() is called within
     *                                                   a class that extends GlobalActivity
@@ -58,19 +60,9 @@ public class Utility {
                     String key = (String)iterator.next();
                     String value = jsonObject.getString(key);
 
-                    int tmp_int = StringToInt(value, DEFAULT_INT);
-                    if (tmp_int != DEFAULT_INT){
-                        bundle.putInt(key, tmp_int);
-                        continue;
-                    }
-
-                    double tmp_double = StringToDouble(value, DEFAULT_DOUBLE);
-                    if (tmp_double != DEFAULT_DOUBLE){
-                        bundle.putDouble(key, tmp_double);
-                        continue;
-                    }
-
-                    bundle.putString(key, value);
+                    if (INT_KEYS.contains(key)){ bundle.putInt(key, StringToInt(value, DEFAULT_INT)); }
+                    else if (DOUBLE_KEYS.contains(key)){ bundle.putDouble(key, StringToDouble(value, DEFAULT_DOUBLE)); }
+                    else{ bundle.putString(key, value); }
                 }
                 allData.add(bundle);
             }
@@ -89,19 +81,9 @@ public class Utility {
                 String key = (String)iterator.next();
                 String value = jsonObject.getString(key);
 
-                int tmp_int = StringToInt(value, DEFAULT_INT);
-                if (tmp_int != DEFAULT_INT){
-                    bundle.putInt(key, tmp_int);
-                    continue;
-                }
-
-                double tmp_double = StringToDouble(value, DEFAULT_DOUBLE);
-                if (tmp_double != DEFAULT_DOUBLE){
-                    bundle.putDouble(key, tmp_double);
-                    continue;
-                }
-
-                bundle.putString(key, value);
+                if (INT_KEYS.contains(key)){ bundle.putInt(key, StringToInt(value, DEFAULT_INT)); }
+                else if (DOUBLE_KEYS.contains(key)){ bundle.putDouble(key, StringToDouble(value, DEFAULT_DOUBLE)); }
+                else{ bundle.putString(key, value); }
             }
 
             return bundle;
@@ -138,7 +120,7 @@ public class Utility {
             }
 
             //successful query
-            if (response.getString("description", "none").equals("Success")){
+            if (response.getInt("status", 0) == 200){
                 return Utility.StringToBundleArray(response.getString("data", "none"));
             }
 

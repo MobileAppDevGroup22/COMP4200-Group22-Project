@@ -44,7 +44,7 @@ public class PurchaseListAdapter extends ArrayAdapter<Purchase> {
 
         dateDisplay.setText(date);
         descriptionDisplay.setText(description);
-        amountDisplay.setText(Double.toString(amount));
+        amountDisplay.setText("$" + Double.toString(amount));
 
         return convertView;
     }

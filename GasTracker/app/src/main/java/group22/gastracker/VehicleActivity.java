@@ -54,14 +54,9 @@ public class VehicleActivity extends GlobalActivity {
         vehicleName = findViewById(R.id.editText_vehicle);
 
         vehicleListView = findViewById(R.id.listView_vehicles);
-        /*
-        arrayList_vehicleList.add("2014 Ford Edge");
-        arrayList_vehicleList.add("2006 Toyota Corolla");
-        arrayList_vehicleList.add("2006 Honda Civic");
-         */
+
+        Log.d("testdatabase", "created");
         getVehicleList();
-        adapter_vehicleList = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, arrayList_vehicleList);
-        vehicleListView.setAdapter(adapter_vehicleList);
 
         addVehicleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,22 +102,23 @@ public class VehicleActivity extends GlobalActivity {
     protected void getVehicleList(){
         GlobalGasTracker globalData = (GlobalGasTracker) getApplication();
         String username = globalData.getUsername();
-
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("type", "vehicle");
         params.put("username", username);
-
         MakeRequest(Request.Method.GET, params,
             new Response.Listener<String>() {
                 @Override
                 public void onResponse(String r) {
-                    //Log.d("Response 1", r);
                     ArrayList<Bundle> extractedData = HandleReceivedData(getApplicationContext(), r);
+
                     if (extractedData == null)return;
 
                     for(Bundle currentDataBundle : extractedData){
-                        arrayList_vehicleList.add(currentDataBundle.getString("vehiclename", null));
+                        String vehicle = currentDataBundle.getString("vehiclename", null);
+                        arrayList_vehicleList.add(vehicle);
                     }
+                    adapter_vehicleList = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, arrayList_vehicleList);
+                    vehicleListView.setAdapter(adapter_vehicleList);
                 }
             });
     }
