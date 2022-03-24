@@ -76,15 +76,39 @@ public class LoginActivity extends GlobalActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                /******************************************************
-                 * Check database to see if credentials are correct
-                 */
                 username = usernameView.getText().toString();
-                globalData.setUsername(username);
-                Intent main_intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(main_intent);
+                password = passwordView.getText().toString();
 
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("type", "verify_password");
+                params.put("username", username.trim());
+                params.put("password", password);
+                MakeRequest(Request.Method.GET, params,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String r) {
+                                Log.d("Volley Log", r);
+
+                                ArrayList<Bundle> users = Utility.HandleReceivedData(getApplicationContext(), r);
+                                if (users == null) return;
+
+                                for (Bundle u:users){
+                                    Log.d("Bundle Array", u.toString());
+                                }
+
+                                for(Bundle currentUser : users){
+                                    Log.d("verifyUsers", currentUser.toString());
+                                    Log.d("verifyUsers", "user = " + currentUser.getString("username", null));
+                                    Log.d("verifyUsers", "username = " + currentUser.getString("username", null));
+                                    if(username.equals(currentUser.getString("username", null))){
+                                        globalData.setUsername(username);
+                                        globalData.setPassword(currentUser.getString("password", null));
+                                        Intent main_intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        startActivity(main_intent);
+                                    }
+                                }
+                            }
+                        });
             }
         });
 

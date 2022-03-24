@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class GlobalGasTracker extends Application {
 
     private String username;
-    private ArrayList<String> vehicleList;
+    String password;
 
     public String getUsername() {
         return username;
@@ -16,11 +16,11 @@ public class GlobalGasTracker extends Application {
         this.username = username;
     }
 
-    public ArrayList<String> getVehicleList() {
-        return vehicleList;
+    public String getPassword() {
+        return password;
     }
 
-    public void setVehicleList(ArrayList<String> vehicleList) {
-        this.vehicleList = vehicleList;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

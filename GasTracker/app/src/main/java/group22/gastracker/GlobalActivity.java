@@ -51,7 +51,7 @@ public class GlobalActivity extends AppCompatActivity {
     // pass in request type (e.g. Request.Method.POST), params as JSON object, response listener and error listener
     protected void MakeRequest(int method, Map<String, String> params, Response.Listener<String> responseListener){
         String url = RequestHandler.url;
-        if (method == Request.Method.GET) url = Utility.AttachParamsToUrl(url, params);
+        if (method == Request.Method.GET || method == Request.Method.DELETE) url = Utility.AttachParamsToUrl(url, params);
         /*
         String LogOutput = "";
 
@@ -72,13 +72,11 @@ public class GlobalActivity extends AppCompatActivity {
                                         HashMap<String, String> headers = new HashMap<String, String>();
                                         if (method == Method.POST){
                                             //headers.put("Content-Type", "application/form-data; charset=utf-8");
-
                                         }
                                         headers.put("User-Agent", "GasTracker/1.0");
                                         //headers.put("", "");
                                         return headers;
                                     }
-
                                    @Nullable
                                    @Override
                                    protected Map<String, String> getParams() throws AuthFailureError {
