@@ -37,16 +37,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <View
+        android:id="@+id/viewSettings"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="?android:attr/textColor"
+        app:layout_constraintTop_toBottomOf="@+id/switch_DarkMode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <LinearLayout
+        android:id="@+id/Linear_ThemeSelect"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="9dp"
         android:layout_marginEnd="16dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch_DarkMode">
+        app:layout_constraintTop_toBottomOf="@+id/viewSettings">
 
         <TextView
             android:layout_width="wrap_content"
@@ -62,5 +75,29 @@
             android:layout_gravity="center_vertical"
             android:background="@drawable/circle_button" />
     </LinearLayout>
+
+    <View
+        android:id="@+id/viewSettings2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="?android:attr/textColor"
+        app:layout_constraintTop_toBottomOf="@+id/Linear_ThemeSelect"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_signOut"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="16dp"
+        android:text="Sign out"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewSettings2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

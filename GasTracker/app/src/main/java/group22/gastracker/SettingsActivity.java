@@ -26,7 +26,7 @@ public class SettingsActivity extends GlobalActivity {
     BottomNavigationView bottomNav;
 
     Switch darkModeSwitch;
-    Button themeSelectButton;
+    Button themeSelectButton, signOutButton;
 
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
@@ -49,7 +49,7 @@ public class SettingsActivity extends GlobalActivity {
         setContentView(R.layout.activity_settings);
         setTitle("Settings");
         this.bottomNavBarHandler();
-
+        signOutButton = findViewById(R.id.button_signOut);
         themeSelectButton = findViewById(R.id.button_themeSelect);
         darkModeSwitch = findViewById(R.id.switch_DarkMode);
         if(darkMode){
@@ -74,6 +74,27 @@ public class SettingsActivity extends GlobalActivity {
                 saveValue();
             }
         });
+
+
+        signOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                removeSavedUser();
+            }
+        });
+
+    }
+
+    public void removeSavedUser(){
+        sharedPreferences = getSharedPreferences("saveLoginInfo", Context.MODE_PRIVATE);
+        SharedPreferences.Editor sharedPrefEditor = sharedPreferences.edit();
+        sharedPrefEditor.putString("username", null);
+        sharedPrefEditor.putString("password", null);
+        sharedPrefEditor.putBoolean("isRemember", false);
+        sharedPrefEditor.commit();
+
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        startActivity(intent);
 
     }
 

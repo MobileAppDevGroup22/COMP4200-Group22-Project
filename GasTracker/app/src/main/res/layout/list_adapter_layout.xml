@@ -21,7 +21,8 @@
             android:layout_weight="48"
             android:gravity="left|center_vertical"
             android:text="Gas"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textColor="?android:attr/colorForeground"/>
 
         <TextView
             android:id="@+id/textView_Date"

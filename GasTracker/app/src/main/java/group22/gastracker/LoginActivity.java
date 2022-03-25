@@ -49,13 +49,20 @@ public class LoginActivity extends GlobalActivity {
         updateTheme();
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
-        GlobalGasTracker globalData = (GlobalGasTracker) getApplication();
         usernameView = findViewById(R.id.editText_Username);
         passwordView = findViewById(R.id.editText_Password);
         rememberCheck = findViewById(R.id.checkBox_Remember);
         loginButton = findViewById(R.id.button_logIn);
         signUpButton = findViewById(R.id.button_signUp);
         getSavedValue();
+
+        if(rememberCheck.isChecked()){
+            loginButton.performClick();
+            loginButton.setPressed(true);
+            loginButton.invalidate();
+            loginButton.setPressed(false);
+            loginButton.invalidate();
+        }
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,37 +85,7 @@ public class LoginActivity extends GlobalActivity {
             public void onClick(View view) {
                 username = usernameView.getText().toString();
                 password = passwordView.getText().toString();
-
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put("type", "verify_password");
-                params.put("username", username.trim());
-                params.put("password", password);
-                MakeRequest(Request.Method.GET, params,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String r) {
-                                Log.d("Volley Log", r);
-
-                                ArrayList<Bundle> users = Utility.HandleReceivedData(getApplicationContext(), r);
-                                if (users == null) return;
-
-                                for (Bundle u:users){
-                                    Log.d("Bundle Array", u.toString());
-                                }
-
-                                for(Bundle currentUser : users){
-                                    Log.d("verifyUsers", currentUser.toString());
-                                    Log.d("verifyUsers", "user = " + currentUser.getString("username", null));
-                                    Log.d("verifyUsers", "username = " + currentUser.getString("username", null));
-                                    if(username.equals(currentUser.getString("username", null))){
-                                        globalData.setUsername(username);
-                                        globalData.setPassword(currentUser.getString("password", null));
-                                        Intent main_intent = new Intent(LoginActivity.this, MainActivity.class);
-                                        startActivity(main_intent);
-                                    }
-                                }
-                            }
-                        });
+                verifyUser(username, password);
             }
         });
 
@@ -152,6 +129,41 @@ public class LoginActivity extends GlobalActivity {
 
     }
 
+    private void verifyUser(String username, String password){
+        GlobalGasTracker globalData = (GlobalGasTracker) getApplication();
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("type", "verify_password");
+        params.put("username", username.trim());
+        params.put("password", password);
+        MakeRequest(Request.Method.GET, params,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String r) {
+                        Log.d("Volley Log", r);
+
+                        ArrayList<Bundle> users = Utility.HandleReceivedData(getApplicationContext(), r);
+                        if (users == null) return;
+
+                        for (Bundle u:users){
+                            Log.d("Bundle Array", u.toString());
+                        }
+
+                        for(Bundle currentUser : users){
+                            Log.d("verifyUsers", currentUser.toString());
+                            Log.d("verifyUsers", "user = " + currentUser.getString("username", null));
+                            Log.d("verifyUsers", "username = " + currentUser.getString("username", null));
+                            if(username.equals(currentUser.getString("username", null))){
+                                globalData.setUsername(username);
+                                globalData.setPassword(currentUser.getString("password", null));
+                                rememberValues();
+                                Intent main_intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(main_intent);
+                            }
+                        }
+                    }
+                });
+    }
+
     private void forgetValues(){
         SharedPreferences.Editor sharedPrefEditor = sharedPreferences.edit();
         sharedPrefEditor.putString("username", null);
@@ -173,7 +185,6 @@ public class LoginActivity extends GlobalActivity {
             sharedPrefEditor.putString("password", password);
             sharedPrefEditor.putBoolean("isRemember", isRemember);
             sharedPrefEditor.commit();
-            Toast.makeText(getApplicationContext(), "Values Saved!", Toast.LENGTH_LONG).show();
         }else{
             sharedPrefEditor.putString("username", null);
             sharedPrefEditor.putString("password", null);
@@ -193,6 +204,9 @@ public class LoginActivity extends GlobalActivity {
         usernameView.setText(username);
         passwordView.setText(password);
         rememberCheck.setChecked(isRemember);
+        if(isRemember){
+            verifyUser(username, password);
+        }
     }
 
     protected void getSavedTheme(){
