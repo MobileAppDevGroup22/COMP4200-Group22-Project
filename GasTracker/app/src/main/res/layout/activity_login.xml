@@ -37,7 +37,8 @@
         android:layout_marginBottom="160dp"
         android:text="Remember Password?"
         app:layout_constraintBottom_toTopOf="@+id/button_logIn"
-        app:layout_constraintStart_toStartOf="@+id/editText_Password" />
+        app:layout_constraintStart_toStartOf="@+id/editText_Password"
+        android:buttonTint="?android:attr/colorPrimary"/>
 
     <Button
         android:id="@+id/button_logIn"
