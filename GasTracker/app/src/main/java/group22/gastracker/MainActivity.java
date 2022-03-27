@@ -42,20 +42,20 @@ import group22.gastracker.purchases.PurchaseListActivity;
 public class MainActivity extends GlobalActivity {
 
     FloatingActionButton addNewEntryButton;
-    Button seeAllPurchasesButton, seeAllVehiclePurchasesButton, newPurchaseButton;
+    Button seeAllPurchasesButton, seeAllVehiclePurchasesButton, newPurchaseButton, cancelPurchaseButton;
     Spinner purchaseTypeSelect;
     EditText purchaseCost, gasPrice;
-    TextView totalSpentDisplay, totalGasDisplay, totalRepairDisplay, totalOtherDisplay,
+    TextView currentVehicleDisplay, totalSpentDisplay, totalGasDisplay, totalRepairDisplay, totalOtherDisplay,
             totalSpentVehicleDisplay, gasSpentDisplay, gasLitresDisplay, repairsDisplay, insurDisplay, miscDisplay, numPurchDisplay, percentageDisplay;
 
     LinearLayout gasCostLayout;
     TextInputLayout vehicleDropDown;
     AutoCompleteTextView vehicleDropDownOptions;
     ArrayList<String> arrayList_vehicleList = new ArrayList<String>();
-    List<Integer> arrayList_vehicleIDList = new ArrayList<Integer>();
     ArrayAdapter<String> arrayAdapter_vehicles;
 
     BottomNavigationView bottomNav;
+
 
     double totalSpent = 0;
     double spentOnGas = 0;
@@ -112,10 +112,12 @@ public class MainActivity extends GlobalActivity {
     }
 
     protected void MainFunctions(ArrayList<Bundle> extractedPurchases, ArrayList<Bundle> extractedVehicles){
-        Log.d("asdklasjdklajs", "IN MAIN");
         for(Bundle currentDataBundle : extractedVehicles){
             String vehicle = currentDataBundle.getString("vehiclename", null);
             arrayList_vehicleList.add(vehicle);
+        }
+        if(currentVehiclePosition >= arrayList_vehicleList.size()){
+            currentVehiclePosition = 0;
         }
         if(extractedPurchases != null){
             vehicleID = extractedVehicles.get(currentVehiclePosition).getInt("vehicleid", -1);
@@ -166,7 +168,6 @@ public class MainActivity extends GlobalActivity {
         addNewEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast toast = Toast.makeText(getApplicationContext(), "PRESSED", Toast.LENGTH_SHORT);
                 showNewPurchaseDialog(vehicleID);
             }
         });
@@ -265,12 +266,15 @@ public class MainActivity extends GlobalActivity {
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.new_purchase_dialog);
 
-
         purchaseTypeSelect = dialog.findViewById(R.id.spinner_purchaseType);
         purchaseCost = dialog.findViewById(R.id.editText_purchaseCost);
         gasPrice = dialog.findViewById(R.id.editText_gasPrice);
         newPurchaseButton = dialog.findViewById(R.id.button_newPurchase);
+        cancelPurchaseButton = dialog.findViewById(R.id.button_cancelNewPurchase);
         gasCostLayout = dialog.findViewById(R.id.LinearLayout_gasCost);
+        currentVehicleDisplay = dialog.findViewById(R.id.textView_vehicleForPurchase);
+
+        currentVehicleDisplay.setText(vehicleDropDown.getEditText().getText().toString());
 
         ArrayList<String> purchaseTypeOptions = new ArrayList<String>(Arrays.asList("Gas", "General Repair", "Oil Change", "Insurance", "Misc"));
         ArrayAdapter<String> purchaseAdapter = new ArrayAdapter<String>(this, R.layout.dropdown_item, purchaseTypeOptions);
@@ -302,12 +306,14 @@ public class MainActivity extends GlobalActivity {
                     data = null;
 
                 String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-                Log.d("mainpurchasedebug", Integer.toString(vehicleID));
-                Log.d("mainpurchasedebug", "type = " + purchaseType);
-                Log.d("mainpurchasedebug", "amount = " + amount);
-                Log.d("mainpurchasedebug", "data = " + data);
-                Log.d("mainpurchasedebug", "date = " + date);
                 addPurchase(vehicleID, purchaseType, amount, data, date);
+                dialog.dismiss();
+            }
+        });
+
+        cancelPurchaseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 dialog.dismiss();
             }
         });
@@ -351,7 +357,6 @@ public class MainActivity extends GlobalActivity {
     }
 
     protected void getPurchaseList(ArrayList<Bundle> extractedVehicles){
-        Log.d("asdklasjdklajs", "IN PURCHSE LIST");
         GlobalGasTracker globalData = (GlobalGasTracker) getApplication();
         String username = globalData.getUsername();
 
@@ -359,16 +364,13 @@ public class MainActivity extends GlobalActivity {
         params.put("type", "purchase");
         params.put("username", username);
 
-
         MakeRequest(Request.Method.GET, params,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String r) {
 
                         ArrayList<Bundle> extractedData = HandleReceivedData(getApplicationContext(), r);
-                        //if (extractedData == null)
-                            MainFunctions(extractedData, extractedVehicles);
-                        //else
+                        MainFunctions(extractedData, extractedVehicles);
                     }
                 });
     }
@@ -388,7 +390,6 @@ public class MainActivity extends GlobalActivity {
 
                         if (extractedData == null)return;
                         getPurchaseList(extractedData);
-                        //ainFunctions(extractedData);
                         return;
                     }
                 });
@@ -407,17 +408,6 @@ public class MainActivity extends GlobalActivity {
         intent.putExtra("currentVehicle", vehicleDropDown.getEditText().getText().toString());
         intent.putExtra("currentVehicleID", vehicleID);
         startActivity(intent);
-    }
-    /*******************************************************************************************************
-     * add new entry button*/
-    protected void setAddNewEntryButtonHandler(){
-        addNewEntryButton = findViewById(R.id.actionButton_addEntry);
-        addNewEntryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), vehicleDropDownOptions.getText().toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     /*******************************************************************************************************

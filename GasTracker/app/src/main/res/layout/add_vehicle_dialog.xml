@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Vehicle"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/editText_vehicle"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Vehicle Name"
+        android:inputType="textPersonName"
+        android:minHeight="48dp" />
+
+    <Button
+        android:id="@+id/button_addVehicle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Add Vehicle" />
+
+    <Button
+        android:id="@+id/button_cancelNewVehicle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cancel" />
+</LinearLayout>

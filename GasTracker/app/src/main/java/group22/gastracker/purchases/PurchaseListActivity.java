@@ -94,7 +94,12 @@ public class PurchaseListActivity extends GlobalActivity {
 
 
         noPurchasesText.setVisibility(View.INVISIBLE);
-        purchaseListAdapter = new PurchaseListAdapter(getApplicationContext(), R.layout.list_adapter_layout, arrayList_Purchases);
+        if(darkMode){
+            purchaseListAdapter = new PurchaseListAdapter(getApplicationContext(), R.layout.list_adapter_dark_layout, arrayList_Purchases);
+        }else{
+            purchaseListAdapter = new PurchaseListAdapter(getApplicationContext(), R.layout.list_adapter_layout, arrayList_Purchases);
+        }
+
         purchaseListView.setAdapter(purchaseListAdapter);
 
         purchaseListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -106,7 +111,6 @@ public class PurchaseListActivity extends GlobalActivity {
                 return false;
             }
         });
-
     }
 
     protected void getPurchaseList(){
