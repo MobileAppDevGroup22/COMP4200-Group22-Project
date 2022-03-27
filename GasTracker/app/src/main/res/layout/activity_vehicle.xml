@@ -33,4 +33,53 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <EditText
+        android:id="@+id/newvehiclepopup_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="364dp"
+        android:textSize="24sp"
+        android:hint="Name of Vehicle"
+        android:textAlignment="center"
+        android:gravity="center_horizontal"/>
+
+    <EditText
+        android:id="@+id/newvehiclepopup_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="427dp"
+        android:hint="Vehicle Type"
+        android:textAlignment="center"
+        android:gravity="center_horizontal"/>
+
+    <EditText
+        android:id="@+id/newvehiclepopup_year"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="492dp"
+        android:hint="Vehicle Year"
+        android:textAlignment="center"
+        android:gravity="center_horizontal"/>
+
+    <Button
+        android:id="@+id/save_Button"
+        android:text="Save"
+        android:layout_width="167dp"
+        android:layout_height="52dp"
+        tools:layout_editor_absoluteX="31dp"
+        tools:layout_editor_absoluteY="575dp" />
+
+    <Button
+        android:id="@+id/cancel_Button"
+        android:text="Cancel"
+        android:layout_width="166dp"
+        android:layout_height="54dp"
+        tools:layout_editor_absoluteX="230dp"
+        tools:layout_editor_absoluteY="575dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

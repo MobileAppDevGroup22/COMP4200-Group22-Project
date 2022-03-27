@@ -1,11 +1,15 @@
 package group22.gastracker;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -13,6 +17,11 @@ import com.google.android.material.navigation.NavigationBarView;
 public class VehicleActivity extends GlobalActivity {
 
     BottomNavigationView bottomNav;
+    private AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
+    private EditText newvehiclepopup_name, newvehiclepopup_type, newvehiclepopup_year;
+    private Button newvehcilepopup_save, newvehiclepopup_cancel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,5 +61,35 @@ public class VehicleActivity extends GlobalActivity {
 
     @Override
     public void onBackPressed() {}
+    /*******************************************************************************************************
+     * Popup Window*/
+    public void createNewVehicleDialog(){
+        dialogBuilder= new AlertDialog.Builder( this);
+        final View vehiclePopupView = getLayoutInflater().inflate(R.layout.activity_vehicle, null);
+        newvehiclepopup_name=(EditText) vehiclePopupView.findViewById(R.id.newvehiclepopup_name);
+        newvehiclepopup_type=(EditText) vehiclePopupView.findViewById(R.id.newvehiclepopup_type);
+        newvehiclepopup_year=(EditText) vehiclePopupView.findViewById(R.id.newvehiclepopup_year);
+
+        newvehcilepopup_save=(Button) vehiclePopupView.findViewById(R.id.save_Button);
+        newvehiclepopup_cancel=(Button) vehiclePopupView.findViewById(R.id.cancel_Button);
+
+        dialogBuilder.setView(vehiclePopupView);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        newvehcilepopup_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //how tf do you save the data??
+            }
+        });
+        newvehiclepopup_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+    }
 
 }
