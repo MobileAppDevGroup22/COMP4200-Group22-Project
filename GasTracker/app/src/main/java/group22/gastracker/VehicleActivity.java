@@ -3,15 +3,20 @@ package group22.gastracker;
 import static group22.gastracker.Utility.HandleReceivedData;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,10 +26,13 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import group22.gastracker.purchases.PurchaseListActivity;
 
 public class VehicleActivity extends GlobalActivity {
 
@@ -34,7 +42,8 @@ public class VehicleActivity extends GlobalActivity {
     int currentTheme = 0;
     SharedPreferences sharedPreferences;
 
-    Button addVehicleButton;
+    FloatingActionButton addVehicleFloatButton;
+    Button addVehicleButton, cancelNewVehicleButton;
     EditText vehicleName;
     ListView vehicleListView;
     ArrayList<String> arrayList_vehicleList = new ArrayList<>();
@@ -50,13 +59,55 @@ public class VehicleActivity extends GlobalActivity {
         this.bottomNavBarHandler();
         GlobalGasTracker globalData = (GlobalGasTracker) getApplication();
 
-        addVehicleButton = findViewById(R.id.button_addVehicle);
-        vehicleName = findViewById(R.id.editText_vehicle);
-
+        addVehicleFloatButton = findViewById(R.id.floatingActionButton_addVehicle);
         vehicleListView = findViewById(R.id.listView_vehicles);
-
-        Log.d("testdatabase", "created");
         getVehicleList();
+
+
+
+    }
+
+    protected void VehicleActivityFunctions(ArrayList<Bundle> extractedData){
+
+        for(Bundle currentDataBundle : extractedData){
+            String vehicle = currentDataBundle.getString("vehiclename", null);
+            arrayList_vehicleList.add(vehicle);
+        }
+        if(darkMode) {
+            adapter_vehicleList = new VehicleListAdapter(getApplicationContext(), R.layout.vehicle_list_adapter_layout, arrayList_vehicleList);
+        }else {
+            adapter_vehicleList = new VehicleListAdapter(getApplicationContext(), R.layout.vehicle_list_dark_adapter_layout, arrayList_vehicleList);
+        }
+        vehicleListView.setAdapter(adapter_vehicleList);
+
+        addVehicleFloatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showAddVehicleDialog();
+            }
+        });
+
+        vehicleListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int selectedItem, long l) {
+                Bundle bundle = extractedData.get(selectedItem);
+                int vehicleID = bundle.getInt("vehicleid", -1);
+                deleteVehicleDialog(vehicleID);
+                return false;
+            }
+        });
+
+    }
+
+    protected void showAddVehicleDialog(){
+        final Dialog dialog = new Dialog(VehicleActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.add_vehicle_dialog);
+
+        addVehicleButton = dialog.findViewById(R.id.button_addVehicle);
+        cancelNewVehicleButton = dialog.findViewById(R.id.button_cancelNewVehicle);
+        vehicleName = dialog.findViewById(R.id.editText_vehicle);
 
         addVehicleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,12 +116,68 @@ public class VehicleActivity extends GlobalActivity {
                 if(!newVehicle.equals("")){
                     addVehicle(newVehicle);
                 }
+                dialog.dismiss();
                 finish();
                 startActivity(getIntent());
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
         });
 
+        cancelNewVehicleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    protected void deleteVehicleDialog(int vehicleID){
+        AlertDialog.Builder deleteDialog = new AlertDialog.Builder(VehicleActivity.this);
+        deleteDialog.setTitle("Delete Vehicle");
+        deleteDialog.setMessage("Do you want to delete this vehicle?");
+        deleteDialog.setCancelable(false);
+        deleteDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        deleteDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                deleteVehicle(vehicleID);
+            }
+        });
+        AlertDialog alert = deleteDialog.create();
+        alert.show();
+    }
+
+    protected void deleteVehicle(int vehicleID){
+        GlobalGasTracker globalData = (GlobalGasTracker) getApplication();
+        String password = globalData.getPassword();
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("type", "vehicle");
+        params.put("vehicleid", Integer.toString(vehicleID));
+        params.put("password", password);
+
+        MakeRequest(Request.Method.DELETE, params,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String r) {
+                        ArrayList<Bundle> users = Utility.HandleReceivedData(getApplicationContext(), r);
+                        if (users == null) return;
+
+                        for (Bundle u:users){
+                            Log.d("Bundle Array", u.toString());
+                        }
+                        finish();
+                        startActivity(getIntent());
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    }
+                });
     }
 
     protected void addVehicle(String vehicleName){
@@ -112,13 +219,7 @@ public class VehicleActivity extends GlobalActivity {
                     ArrayList<Bundle> extractedData = HandleReceivedData(getApplicationContext(), r);
 
                     if (extractedData == null)return;
-
-                    for(Bundle currentDataBundle : extractedData){
-                        String vehicle = currentDataBundle.getString("vehiclename", null);
-                        arrayList_vehicleList.add(vehicle);
-                    }
-                    adapter_vehicleList = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, arrayList_vehicleList);
-                    vehicleListView.setAdapter(adapter_vehicleList);
+                    VehicleActivityFunctions(extractedData);
                 }
             });
     }

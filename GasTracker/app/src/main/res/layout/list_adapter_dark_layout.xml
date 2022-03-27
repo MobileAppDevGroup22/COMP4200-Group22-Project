@@ -22,13 +22,14 @@
             android:gravity="left|center_vertical"
             android:text="Gas"
             android:textSize="20sp"
-            android:textColor="@color/lightMode_text"/>
+            android:textColor="@color/white"/>
 
         <TextView
             android:id="@+id/textView_Date"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="63"
+            android:textColor="@color/grey"
             android:gravity="left|center_vertical"
             android:text="2022-03-17" />
     </LinearLayout>
@@ -39,7 +40,7 @@
         android:layout_height="50dp"
         android:layout_marginRight="16dp"
         android:layout_weight="68"
-        android:textColor="@color/lightMode_text"
+        android:textColor="@color/white"
         android:gravity="right|center_vertical"
         android:text="$47.50"
         android:textSize="18sp" />

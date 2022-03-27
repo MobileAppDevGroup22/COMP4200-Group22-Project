@@ -17,6 +17,7 @@
 
     <color name="background_light">#FFF0F0F3</color>
     <color name="lightMode_text">#222222</color>
+    <color name="grey">#7C7C7C</color>
 
     <color name="darkMode_text">#FFFFFF</color>
 </resources>
