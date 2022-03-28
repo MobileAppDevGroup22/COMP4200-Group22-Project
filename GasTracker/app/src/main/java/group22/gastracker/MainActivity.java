@@ -43,10 +43,10 @@ public class MainActivity extends GlobalActivity {
 
     FloatingActionButton addNewEntryButton;
     Button seeAllPurchasesButton, seeAllVehiclePurchasesButton, newPurchaseButton, cancelPurchaseButton;
-    Spinner purchaseTypeSelect;
+    Spinner purchaseTypeSelect, currentVehicleSpinner;
     EditText purchaseCost, gasPrice;
     TextView currentVehicleDisplay, totalSpentDisplay, totalGasDisplay, totalRepairDisplay, totalOtherDisplay,
-            totalSpentVehicleDisplay, gasSpentDisplay, gasLitresDisplay, repairsDisplay, insurDisplay, miscDisplay, numPurchDisplay, percentageDisplay;
+            totalSpentVehicleDisplay, gasSpentDisplay, gasLitresDisplay, repairsDisplay, insurDisplay, miscDisplay, numPurchDisplay;
 
     LinearLayout gasCostLayout;
     TextInputLayout vehicleDropDown;
@@ -63,6 +63,8 @@ public class MainActivity extends GlobalActivity {
     double spentOnOilChange = 0;
     double spentOnInsurance = 0;
     double spentOnMisc = 0;
+    double litresOfGas = 0;
+    /*
     double totalSpentVehicle = 0;
     double spentGasVehicle = 0;
     double litresVehicle = 0;
@@ -71,8 +73,8 @@ public class MainActivity extends GlobalActivity {
     double spentMiscVehicle = 0;
     double numPurchasesVehicle = 0;
     double percentageOfPurchases = 0;
-
-    int currentVehiclePosition;
+*/
+    int currentListPosition;
     int vehicleID = -1;
     int currentTheme = 0;
     boolean darkMode = false;
@@ -92,44 +94,44 @@ public class MainActivity extends GlobalActivity {
 
         vehicleDropDown = findViewById(R.id.textInputLayout);
         vehicleDropDownOptions = findViewById(R.id.vehicle_dropdown);
-        seeAllPurchasesButton = findViewById(R.id.button_seeAllPurchases);
-        seeAllVehiclePurchasesButton = findViewById(R.id.button_seeAllPurchasesVehicle);
+        seeAllPurchasesButton = findViewById(R.id.button_seeAllPurchasesVehicle);
 
-        totalSpentDisplay = findViewById(R.id.textView_totalSpentDisplay);
-        totalGasDisplay = findViewById(R.id.textView_totalSpentGas);
-        totalRepairDisplay = findViewById(R.id.textView_totalSpentRepair);
-        totalOtherDisplay = findViewById(R.id.textView_totalSpentOther);
-
-        totalSpentVehicleDisplay = findViewById(R.id.textView_totalSpentDisplayVehicle);
+        totalSpentDisplay = findViewById(R.id.textView_totalSpentDisplayVehicle);
         gasSpentDisplay = findViewById(R.id.textView_totalSpentGasVehicle);
         gasLitresDisplay = findViewById(R.id.textView_totalLitresVehicle);
         repairsDisplay = findViewById(R.id.textView_totalSpentRepairsVehicle);
         insurDisplay = findViewById(R.id.textView_totalSpentInsuranceVehicle);
         miscDisplay = findViewById(R.id.textView_totalSpentMiscVehicle);
         numPurchDisplay = findViewById(R.id.textView_totalNumberOfPurchasesVehicle);
-        percentageDisplay = findViewById(R.id.textView_totalPercentage);
         getVehicleList();
     }
 
     protected void MainFunctions(ArrayList<Bundle> extractedPurchases, ArrayList<Bundle> extractedVehicles){
+        arrayList_vehicleList.add("All Vehicles");
         for(Bundle currentDataBundle : extractedVehicles){
             String vehicle = currentDataBundle.getString("vehiclename", null);
             arrayList_vehicleList.add(vehicle);
         }
-        if(currentVehiclePosition >= arrayList_vehicleList.size()){
-            currentVehiclePosition = 0;
+        if(currentListPosition >= arrayList_vehicleList.size()){
+            currentListPosition = 0;
         }
+
         if(extractedPurchases != null){
-            vehicleID = extractedVehicles.get(currentVehiclePosition).getInt("vehicleid", -1);
-            getStats(extractedPurchases);
-            getVehicleStats(extractedPurchases);
+            if(currentListPosition == 0){
+                getStats(extractedPurchases);
+            }else{
+                int currentVehiclePostition = currentListPosition - 1;
+                vehicleID = extractedVehicles.get(currentVehiclePostition).getInt("vehicleid", -1);
+                rememberVehicle();
+                if(extractedPurchases != null){
+                    getVehicleStats(extractedPurchases);
+                }
+            }
         }else{
             totalSpentDisplay.setText("$0");
             totalRepairDisplay.setText("0 L");
             totalOtherDisplay.setText("$0");
         }
-
-        vehicleID = extractedVehicles.get(currentVehiclePosition).getInt("vehicleid", -1);
 
         addNewEntryButton = findViewById(R.id.actionButton_addEntry);
         vehicleDropDown = findViewById(R.id.textInputLayout);
@@ -137,52 +139,57 @@ public class MainActivity extends GlobalActivity {
 
         arrayAdapter_vehicles = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, arrayList_vehicleList);
         vehicleDropDownOptions.setAdapter(arrayAdapter_vehicles);
-        vehicleDropDownOptions.setText(arrayList_vehicleList.get(currentVehiclePosition), false);
-
+        vehicleDropDownOptions.setText(arrayList_vehicleList.get(currentListPosition), false);
         vehicleDropDownOptions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                currentVehiclePosition = position;
-                vehicleID = extractedVehicles.get(currentVehiclePosition).getInt("vehicleid", -1);
-                rememberVehicle();
-                if(extractedPurchases != null){
-                    getVehicleStats(extractedPurchases);
+                currentListPosition = position;
+                if(currentListPosition == 0){
+                    getStats(extractedPurchases);
+                }else{
+                    int currentVehiclePostition = currentListPosition - 1;
+                    vehicleID = extractedVehicles.get(currentVehiclePostition).getInt("vehicleid", -1);
+                    if(extractedPurchases != null){
+                        getVehicleStats(extractedPurchases);
+                    }
                 }
+                rememberVehicle();
             }
         });
 
         seeAllPurchasesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                seeAllPurchasesButtonHandler();
-            }
-        });
-
-        seeAllVehiclePurchasesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                seeAllPurchasesVehicleButtonHandler(vehicleID);
+                if(currentListPosition > 0){
+                    vehicleID = extractedVehicles.get(currentListPosition-1).getInt("vehicleid", -1);
+                    seeAllPurchasesVehicleButtonHandler(vehicleID);
+                }else{
+                    seeAllPurchasesButtonHandler();
+                }
             }
         });
 
         addNewEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showNewPurchaseDialog(vehicleID);
+                showNewPurchaseDialog(extractedVehicles);
             }
         });
 
     }
 
     protected void getStats(ArrayList<Bundle> extractedPurchases){
+        int purchaseCount = 0;
+        double litreCount = 0;
         for(Bundle currentDataBundle : extractedPurchases){
-            Log.d("totalSpentdebud", currentDataBundle.toString());
+            ++purchaseCount;
             String purchaseType = currentDataBundle.getString("purchasetype", "misc");
             double amount = currentDataBundle.getDouble("amountspent", 0);
-            Log.d("totalSpentdebud", "Amount = " + amount);
             switch (purchaseType){
                 case "Gas":
                     spentOnGas += amount;
+                    double litrePrice = currentDataBundle.getDouble("purchasedata", 0);
+                    litreCount += (amount/litrePrice);
                     break;
                 case "General Repair":
                     spentOnRepairs += amount;
@@ -198,16 +205,26 @@ public class MainActivity extends GlobalActivity {
                     break;
             }
         }
+
         totalSpent = spentOnGas + spentOnRepairs + spentOnInsurance + spentOnMisc;
-        double totalOther = spentOnInsurance + spentOnMisc;
+
         totalSpentDisplay.setText(String.format("$%.2f", totalSpent));
-        totalGasDisplay.setText(String.format("$%.2f", spentOnGas));
-        totalRepairDisplay.setText(String.format("$%.2f", spentOnRepairs));
-        totalOtherDisplay.setText(String.format("$%.2f", totalOther));
-        getVehicleStats(extractedPurchases);
+        gasSpentDisplay.setText(String.format("$%.2f", spentOnGas));
+        gasLitresDisplay.setText(String.format("%.2fL", litreCount));
+        repairsDisplay.setText(String.format("$%.2f", spentOnRepairs));
+        insurDisplay.setText(String.format("$%.2f", spentOnInsurance));
+        miscDisplay.setText(String.format("$%.2f", spentOnMisc));
+        numPurchDisplay.setText(Integer.toString(purchaseCount));
+
+        totalSpent = 0;
+        spentOnGas = 0;
+        spentOnRepairs = 0;
+        spentOnInsurance = 0;
+        spentOnMisc = 0;
     }
 
     protected void getVehicleStats(ArrayList<Bundle> extractedPurchases){
+        Log.d("helpmedebug", "getting vehicle stats");
         int purchaseCount = 0;
         double litreCount = 0;
         for(Bundle currentDataBundle : extractedPurchases){
@@ -217,50 +234,46 @@ public class MainActivity extends GlobalActivity {
                 double amount = currentDataBundle.getDouble("amountspent", 0);
                 switch (purchaseType){
                     case "Gas":
-                        spentGasVehicle += amount;
+                        spentOnGas += amount;
                         double litrePrice = currentDataBundle.getDouble("purchasedata", 0);
                         litreCount += (amount/litrePrice);
                         break;
                     case "General Repair":
-                        spentRepairsVehicle += amount;
+                        spentOnRepairs += amount;
                         break;
                     case "Oil Change":
-                        spentRepairsVehicle += amount;
+                        spentOnRepairs += amount;
                         break;
                     case "Insurance":
-                        spentInsuranceVehicle += amount;
+                        spentOnInsurance += amount;
                         break;
                     default:
-                        spentMiscVehicle += amount;
+                        spentOnMisc += amount;
                         break;
                 }
             }
         }
 
-        totalSpentVehicle = spentGasVehicle + spentRepairsVehicle + spentInsuranceVehicle + spentMiscVehicle;
-        double percentOfPurchases = (totalSpentVehicle/totalSpent)*100;
+        totalSpent = spentOnGas + spentOnRepairs + spentOnInsurance + spentOnMisc;
+        double percentOfPurchases = (totalSpent/totalSpent)*100;
 
-        totalSpentVehicleDisplay.setText(String.format("$%.2f", totalSpentVehicle));
-        gasSpentDisplay.setText(String.format("$%.2f", spentGasVehicle));
+        totalSpentDisplay.setText(String.format("$%.2f", totalSpent));
+        gasSpentDisplay.setText(String.format("$%.2f", spentOnGas));
         gasLitresDisplay.setText(String.format("%.2fL", litreCount));
-        repairsDisplay.setText(String.format("$%.2f", spentRepairsVehicle));
-        insurDisplay.setText(String.format("$%.2f", spentInsuranceVehicle));
-        miscDisplay.setText(String.format("$%.2f", spentMiscVehicle));
+        repairsDisplay.setText(String.format("$%.2f", spentOnRepairs));
+        insurDisplay.setText(String.format("$%.2f", spentOnInsurance));
+        miscDisplay.setText(String.format("$%.2f", spentOnMisc));
         numPurchDisplay.setText(Integer.toString(purchaseCount));
-        percentageDisplay.setText("This vehicle accounts for " + String.format("%.2f", percentOfPurchases) + "% of your total purchases");
 
-        totalSpentVehicle = 0;
-        spentGasVehicle = 0;
-        litresVehicle = 0;
-        spentRepairsVehicle = 0;
-        spentInsuranceVehicle = 0;
-        spentMiscVehicle = 0;
-        numPurchasesVehicle = 0;
-        percentageOfPurchases = 0;
+        totalSpent = 0;
+        spentOnGas = 0;
+        spentOnRepairs = 0;
+        spentOnInsurance = 0;
+        spentOnMisc = 0;
     }
 
-    void showNewPurchaseDialog(int vehicleID){
-
+    void showNewPurchaseDialog(ArrayList<Bundle> extractedVehicles){
+        int currentVehicleSpinnerPosition;
         final Dialog dialog = new Dialog(MainActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
@@ -272,14 +285,26 @@ public class MainActivity extends GlobalActivity {
         newPurchaseButton = dialog.findViewById(R.id.button_newPurchase);
         cancelPurchaseButton = dialog.findViewById(R.id.button_cancelNewPurchase);
         gasCostLayout = dialog.findViewById(R.id.LinearLayout_gasCost);
-        currentVehicleDisplay = dialog.findViewById(R.id.textView_vehicleForPurchase);
-
-        currentVehicleDisplay.setText(vehicleDropDown.getEditText().getText().toString());
+        currentVehicleSpinner = dialog.findViewById(R.id.spinner_vehicleNamePurchase);
 
         ArrayList<String> purchaseTypeOptions = new ArrayList<String>(Arrays.asList("Gas", "General Repair", "Oil Change", "Insurance", "Misc"));
         ArrayAdapter<String> purchaseAdapter = new ArrayAdapter<String>(this, R.layout.dropdown_item, purchaseTypeOptions);
         purchaseTypeSelect.setAdapter(purchaseAdapter);
         purchaseTypeSelect.setSelection(0);
+
+        ArrayList<String> vehicleListOptions = new ArrayList<String>(arrayList_vehicleList);
+        vehicleListOptions.remove(0);
+        ArrayAdapter<String> vehicleOptionsAdapter = new ArrayAdapter<String>(this, R.layout.dropdown_item, vehicleListOptions);
+        currentVehicleSpinner.setAdapter(vehicleOptionsAdapter);
+        if(currentListPosition > 0){
+            currentVehicleSpinnerPosition = currentListPosition-1;
+            currentVehicleSpinner.setSelection(currentListPosition-1);
+        }else{
+            currentVehicleSpinnerPosition = 0;
+            currentVehicleSpinner.setSelection(0);
+        }
+
+
 
         purchaseTypeSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -306,6 +331,7 @@ public class MainActivity extends GlobalActivity {
                     data = null;
 
                 String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+                vehicleID = extractedVehicles.get(currentVehicleSpinner.getSelectedItemPosition()).getInt("vehicleid", -1);
                 addPurchase(vehicleID, purchaseType, amount, data, date);
                 dialog.dismiss();
             }
@@ -446,12 +472,12 @@ public class MainActivity extends GlobalActivity {
     private void rememberVehicle(){
         sharedPreferences = getSharedPreferences("saveCurrentVehicle", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("currentVehicle", currentVehiclePosition);
+        editor.putInt("currentVehicle", currentListPosition);
         editor.commit();
     }
     protected void getSavedValue(){
         sharedPreferences = getSharedPreferences("saveCurrentVehicle", Context.MODE_PRIVATE);
-        currentVehiclePosition = sharedPreferences.getInt("currentVehicle", 0);
+        currentListPosition = sharedPreferences.getInt("currentVehicle", 0);
         sharedPreferences = getSharedPreferences("themeInfo", Context.MODE_PRIVATE);
         currentTheme = sharedPreferences.getInt("currentTheme", 0);
         darkMode = sharedPreferences.getBoolean("darkMode", false);
