@@ -15,6 +15,7 @@
         android:theme="@style/Theme.GasTracker">
         <activity
             android:name=".purchases.PurchaseListActivity"
+            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
             android:exported="false" />
         <activity

@@ -34,7 +34,6 @@ public class PurchaseListActivity extends GlobalActivity {
     ArrayList<Purchase> arrayList_Purchases = new ArrayList<>();
     PurchaseListAdapter purchaseListAdapter;
 
-    TextView purchasesTitle;
     TextView noPurchasesText;
     ListView purchaseListView;
 
@@ -51,8 +50,8 @@ public class PurchaseListActivity extends GlobalActivity {
         getSavedValue();
         updateTheme();
         setContentView(R.layout.activity_purchase_list);
-        getSupportActionBar().hide();
-        purchasesTitle = findViewById(R.id.textView_PuchasesTitle);
+        setTitle("Purchases");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         noPurchasesText = findViewById(R.id.textView_NoPurchases);
         purchaseListView = findViewById(R.id.listView_PurchaseList);
 
@@ -60,20 +59,12 @@ public class PurchaseListActivity extends GlobalActivity {
         if(passedValues != null){
             currentVehicleID = passedValues.getInt("currentVehicleID");
             currentVehicle = passedValues.getString("currentVehicle");
-            purchasesTitle.setText("Purchases - " + currentVehicle);
+            setTitle("Purchases - " + currentVehicle);
             noPurchasesText.setVisibility(View.VISIBLE);
             getVehiclePurchaseList();
         }else{
             getPurchaseList();
         }
-
-
-        /********
-         * Add code to populate list of purchases from database
-         */
-
-
-
     }
 
     protected void PurchaseListFunctions(ArrayList<Bundle> extractedData){

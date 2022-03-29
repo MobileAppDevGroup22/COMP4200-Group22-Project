@@ -9,20 +9,37 @@
         android:id="@+id/textView8"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Purchase"
+        android:layout_marginBottom="16dp"
+        android:text="Add New Purchase"
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/textView_vehicleForPurchase"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:textSize="20dp" />
+        android:layout_height="50dp"
+        android:layout_marginBottom="8dp"
+        android:weightSum="6">
+
+        <TextView
+            android:id="@+id/textView_VehicleNamePurchase"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center|left"
+            android:text="Vehicle:"
+            android:textSize="18sp" />
+
+        <Spinner
+            android:id="@+id/spinner_vehicleNamePurchase"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="300dp"
-        android:layout_height="match_parent"
+        android:layout_height="50dp"
         android:layout_marginBottom="8dp"
         android:weightSum="6">
 
@@ -45,7 +62,7 @@
 
     <LinearLayout
         android:layout_width="300dp"
-        android:layout_height="match_parent"
+        android:layout_height="50dp"
         android:layout_marginBottom="8dp"
         android:weightSum="6">
 

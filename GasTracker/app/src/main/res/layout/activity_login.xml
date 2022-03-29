@@ -35,10 +35,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="160dp"
-        android:text="Remember Password?"
+        android:text="Stay logged in?"
         app:layout_constraintBottom_toTopOf="@+id/button_logIn"
         app:layout_constraintStart_toStartOf="@+id/editText_Password"
         android:buttonTint="?android:attr/colorPrimary"/>
+
 
     <Button
         android:id="@+id/button_logIn"
@@ -46,16 +47,35 @@
         android:layout_height="50dp"
         android:layout_marginBottom="8dp"
         android:text="LOGIN"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/textView_or"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent"
+        app:shapeAppearanceOverlay="@style/buttonShape" />
+
+    <View
+        android:id="@+id/viewLogin"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="64dp"
+        android:background="?android:attr/textColor"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_or"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView_or" />
 
     <TextView
         android:id="@+id/textView_or"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="Or"
+        android:background="?android:attr/windowBackground"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="OR"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/button_signUp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -64,7 +84,9 @@
         android:id="@+id/button_signUp"
         android:layout_width="320dp"
         android:layout_height="50dp"
+        app:shapeAppearanceOverlay="@style/buttonShape"
         android:layout_marginBottom="16dp"
+        android:textColor="@color/white"
         android:text="Sign Up"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

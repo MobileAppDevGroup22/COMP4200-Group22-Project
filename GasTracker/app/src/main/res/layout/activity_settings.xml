@@ -33,6 +33,7 @@
         android:layout_marginEnd="16dp"
         android:text="Dark Mode"
         android:textColor="?android:switchTextAppearance"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -66,7 +67,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="left|center_vertical"
-            android:text="Theme" />
+            android:text="Theme"
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/button_themeSelect"
@@ -91,10 +93,12 @@
     <Button
         android:id="@+id/button_signOut"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="9dp"
         android:layout_marginEnd="16dp"
+        app:shapeAppearanceOverlay="@style/buttonShape"
+        android:textColor="@color/white"
         android:text="Sign out"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
