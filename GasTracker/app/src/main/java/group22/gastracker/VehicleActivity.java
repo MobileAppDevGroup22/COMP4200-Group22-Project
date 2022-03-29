@@ -68,17 +68,18 @@ public class VehicleActivity extends GlobalActivity {
     }
 
     protected void VehicleActivityFunctions(ArrayList<Bundle> extractedData){
-
-        for(Bundle currentDataBundle : extractedData){
-            String vehicle = currentDataBundle.getString("vehiclename", null);
-            arrayList_vehicleList.add(vehicle);
+        if(extractedData != null){
+            for(Bundle currentDataBundle : extractedData){
+                String vehicle = currentDataBundle.getString("vehiclename", null);
+                arrayList_vehicleList.add(vehicle);
+            }
+            if(darkMode) {
+                adapter_vehicleList = new VehicleListAdapter(getApplicationContext(), R.layout.vehicle_list_adapter_layout, arrayList_vehicleList);
+            }else {
+                adapter_vehicleList = new VehicleListAdapter(getApplicationContext(), R.layout.vehicle_list_dark_adapter_layout, arrayList_vehicleList);
+            }
+            vehicleListView.setAdapter(adapter_vehicleList);
         }
-        if(darkMode) {
-            adapter_vehicleList = new VehicleListAdapter(getApplicationContext(), R.layout.vehicle_list_adapter_layout, arrayList_vehicleList);
-        }else {
-            adapter_vehicleList = new VehicleListAdapter(getApplicationContext(), R.layout.vehicle_list_dark_adapter_layout, arrayList_vehicleList);
-        }
-        vehicleListView.setAdapter(adapter_vehicleList);
 
         addVehicleFloatButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +98,9 @@ public class VehicleActivity extends GlobalActivity {
             }
         });
 
+    }
+
+    protected void VehicleActivityEmptyFunctions() {
     }
 
     protected void showAddVehicleDialog(){
@@ -218,7 +222,7 @@ public class VehicleActivity extends GlobalActivity {
                 public void onResponse(String r) {
                     ArrayList<Bundle> extractedData = HandleReceivedData(getApplicationContext(), r);
 
-                    if (extractedData == null)return;
+                    if (extractedData == null)VehicleActivityEmptyFunctions();
                     VehicleActivityFunctions(extractedData);
                 }
             });
