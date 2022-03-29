@@ -129,8 +129,12 @@ public class MainActivity extends GlobalActivity {
             }
         }else{
             totalSpentDisplay.setText("$0");
-            totalRepairDisplay.setText("0 L");
-            totalOtherDisplay.setText("$0");
+            gasSpentDisplay.setText("0");
+            gasLitresDisplay.setText("0 L");
+            repairsDisplay.setText("$0");
+            insurDisplay.setText("$0");
+            miscDisplay.setText("$0");
+            numPurchDisplay.setText("0");
         }
 
         addNewEntryButton = findViewById(R.id.actionButton_addEntry);
