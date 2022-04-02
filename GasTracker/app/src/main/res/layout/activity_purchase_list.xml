@@ -22,7 +22,6 @@
         android:layout_marginBottom="64dp"
         android:text="There are no purchases yet."
         android:textSize="18sp"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/listView_PurchaseList"
         app:layout_constraintEnd_toEndOf="@+id/listView_PurchaseList"
         app:layout_constraintStart_toStartOf="@+id/listView_PurchaseList"
