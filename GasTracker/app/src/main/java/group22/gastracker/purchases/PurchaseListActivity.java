@@ -52,9 +52,8 @@ public class PurchaseListActivity extends GlobalActivity {
         setContentView(R.layout.activity_purchase_list);
         setTitle("Purchases");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        noPurchasesText = findViewById(R.id.textView_NoPurchases);
         purchaseListView = findViewById(R.id.listView_PurchaseList);
-
+        noPurchasesText = findViewById(R.id.textView_NoPurchases);
         Bundle passedValues = getIntent().getExtras();
         if(passedValues != null){
             currentVehicleID = passedValues.getInt("currentVehicleID");
@@ -83,8 +82,6 @@ public class PurchaseListActivity extends GlobalActivity {
             arrayList_Purchases.add(purchase);
         }
 
-
-        noPurchasesText.setVisibility(View.INVISIBLE);
         if(darkMode){
             purchaseListAdapter = new PurchaseListAdapter(getApplicationContext(), R.layout.list_adapter_dark_layout, arrayList_Purchases);
         }else{
@@ -118,7 +115,11 @@ public class PurchaseListActivity extends GlobalActivity {
                     public void onResponse(String r) {
 
                         ArrayList<Bundle> extractedData = HandleReceivedData(getApplicationContext(), r);
-                        if (extractedData == null)return;
+                        if (extractedData == null){
+                            noPurchasesText.setVisibility(View.VISIBLE);
+                            return;
+                        }
+                        noPurchasesText.setVisibility(View.INVISIBLE);
                         PurchaseListFunctions(extractedData);
                     }
                 });
@@ -139,7 +140,11 @@ public class PurchaseListActivity extends GlobalActivity {
                 public void onResponse(String r) {
 
                     ArrayList<Bundle> extractedData = HandleReceivedData(getApplicationContext(), r);
-                    if (extractedData == null)return;
+                    if (extractedData == null){
+                        noPurchasesText.setVisibility(View.VISIBLE);
+                        return;
+                    }
+                    noPurchasesText.setVisibility(View.INVISIBLE);
                     PurchaseListFunctions(extractedData);
                 }
             });

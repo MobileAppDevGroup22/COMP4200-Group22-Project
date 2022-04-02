@@ -42,11 +42,10 @@ import group22.gastracker.purchases.PurchaseListActivity;
 public class MainActivity extends GlobalActivity {
 
     FloatingActionButton addNewEntryButton;
-    Button seeAllPurchasesButton, seeAllVehiclePurchasesButton, newPurchaseButton, cancelPurchaseButton;
+    Button seeAllPurchasesButton, newPurchaseButton, cancelPurchaseButton;
     Spinner purchaseTypeSelect, currentVehicleSpinner;
     EditText purchaseCost, gasPrice;
-    TextView currentVehicleDisplay, totalSpentDisplay, totalGasDisplay, totalRepairDisplay, totalOtherDisplay,
-            totalSpentVehicleDisplay, gasSpentDisplay, gasLitresDisplay, repairsDisplay, insurDisplay, miscDisplay, numPurchDisplay;
+    TextView totalSpentDisplay, gasSpentDisplay, gasLitresDisplay, repairsDisplay, insurDisplay, miscDisplay, numPurchDisplay;
 
     LinearLayout gasCostLayout;
     TextInputLayout vehicleDropDown;
@@ -60,20 +59,9 @@ public class MainActivity extends GlobalActivity {
     double totalSpent = 0;
     double spentOnGas = 0;
     double spentOnRepairs = 0;
-    double spentOnOilChange = 0;
     double spentOnInsurance = 0;
     double spentOnMisc = 0;
-    double litresOfGas = 0;
-    /*
-    double totalSpentVehicle = 0;
-    double spentGasVehicle = 0;
-    double litresVehicle = 0;
-    double spentRepairsVehicle = 0;
-    double spentInsuranceVehicle = 0;
-    double spentMiscVehicle = 0;
-    double numPurchasesVehicle = 0;
-    double percentageOfPurchases = 0;
-*/
+
     int currentListPosition;
     int vehicleID = -1;
     int currentTheme = 0;
@@ -160,6 +148,7 @@ public class MainActivity extends GlobalActivity {
                 rememberVehicle();
             }
         });
+        vehicleDropDownOptions.requestFocus();
 
         seeAllPurchasesButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -307,8 +296,6 @@ public class MainActivity extends GlobalActivity {
             currentVehicleSpinnerPosition = 0;
             currentVehicleSpinner.setSelection(0);
         }
-
-
 
         purchaseTypeSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
