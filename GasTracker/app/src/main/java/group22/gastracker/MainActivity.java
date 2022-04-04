@@ -283,13 +283,13 @@ public class MainActivity extends GlobalActivity {
         currentVehicleSpinner = dialog.findViewById(R.id.spinner_vehicleNamePurchase);
 
         ArrayList<String> purchaseTypeOptions = new ArrayList<String>(Arrays.asList("Gas", "General Repair", "Oil Change", "Insurance", "Misc"));
-        ArrayAdapter<String> purchaseAdapter = new ArrayAdapter<String>(this, R.layout.dropdown_item, purchaseTypeOptions);
+        ArrayAdapter<String> purchaseAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item_layout, purchaseTypeOptions);
         purchaseTypeSelect.setAdapter(purchaseAdapter);
         purchaseTypeSelect.setSelection(0);
 
         ArrayList<String> vehicleListOptions = new ArrayList<String>(arrayList_vehicleList);
         vehicleListOptions.remove(0);
-        ArrayAdapter<String> vehicleOptionsAdapter = new ArrayAdapter<String>(this, R.layout.dropdown_item, vehicleListOptions);
+        ArrayAdapter<String> vehicleOptionsAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item_layout, vehicleListOptions);
         currentVehicleSpinner.setAdapter(vehicleOptionsAdapter);
         if(currentListPosition > 0){
             currentVehicleSpinnerPosition = currentListPosition-1;
