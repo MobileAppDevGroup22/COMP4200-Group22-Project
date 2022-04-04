@@ -137,7 +137,9 @@ public class MainActivity extends GlobalActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 currentListPosition = position;
                 if(currentListPosition == 0){
-                    getStats(extractedPurchases);
+                    if(extractedPurchases != null){
+                        getStats(extractedPurchases);
+                    }
                 }else{
                     int currentVehiclePostition = currentListPosition - 1;
                     vehicleID = extractedVehicles.get(currentVehiclePostition).getInt("vehicleid", -1);
