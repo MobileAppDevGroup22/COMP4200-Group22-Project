@@ -63,22 +63,22 @@ public class VehicleActivity extends GlobalActivity {
         vehicleListView = findViewById(R.id.listView_vehicles);
         getVehicleList();
 
-
-
     }
 
     protected void VehicleActivityFunctions(ArrayList<Bundle> extractedData){
 
-        for(Bundle currentDataBundle : extractedData){
-            String vehicle = currentDataBundle.getString("vehiclename", null);
-            arrayList_vehicleList.add(vehicle);
+        if(extractedData != null){
+            for(Bundle currentDataBundle : extractedData){
+                String vehicle = currentDataBundle.getString("vehiclename", null);
+                arrayList_vehicleList.add(vehicle);
+            }
+            if(darkMode) {
+                adapter_vehicleList = new VehicleListAdapter(getApplicationContext(), R.layout.vehicle_list_adapter_layout, arrayList_vehicleList);
+            }else {
+                adapter_vehicleList = new VehicleListAdapter(getApplicationContext(), R.layout.vehicle_list_dark_adapter_layout, arrayList_vehicleList);
+            }
+            vehicleListView.setAdapter(adapter_vehicleList);
         }
-        if(darkMode) {
-            adapter_vehicleList = new VehicleListAdapter(getApplicationContext(), R.layout.vehicle_list_adapter_layout, arrayList_vehicleList);
-        }else {
-            adapter_vehicleList = new VehicleListAdapter(getApplicationContext(), R.layout.vehicle_list_dark_adapter_layout, arrayList_vehicleList);
-        }
-        vehicleListView.setAdapter(adapter_vehicleList);
 
         addVehicleFloatButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,15 +87,17 @@ public class VehicleActivity extends GlobalActivity {
             }
         });
 
-        vehicleListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int selectedItem, long l) {
-                Bundle bundle = extractedData.get(selectedItem);
-                int vehicleID = bundle.getInt("vehicleid", -1);
-                deleteVehicleDialog(vehicleID);
-                return false;
-            }
-        });
+        if(extractedData != null){
+            vehicleListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> adapterView, View view, int selectedItem, long l) {
+                    Bundle bundle = extractedData.get(selectedItem);
+                    int vehicleID = bundle.getInt("vehicleid", -1);
+                    deleteVehicleDialog(vehicleID);
+                    return false;
+                }
+            });
+        }
 
     }
 
@@ -218,7 +220,7 @@ public class VehicleActivity extends GlobalActivity {
                 public void onResponse(String r) {
                     ArrayList<Bundle> extractedData = HandleReceivedData(getApplicationContext(), r);
 
-                    if (extractedData == null)return;
+                    //if (extractedData == null)return;
                     VehicleActivityFunctions(extractedData);
                 }
             });
