@@ -6,7 +6,7 @@ Please note that much of the code, such as front end code, was peer programmed s
 
 Work done by each group member:
 
-Ruturaj Darji - Full back end
+### Ruturaj Darji - Full back end
 - Created all php scripts to receive and process requests. Also provided an api with documentation for use on the front end
 - Implemented java class and helper methods to streamline making and managing requests
 - Implemented the necessary structures to allow Volley to be used by application. This mainly refers to the RequestHandler singleton
